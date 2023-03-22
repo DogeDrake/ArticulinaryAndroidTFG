@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "936030800031",
+    "project_id": "articullinary",
+    "storage_bucket": "articullinary.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936030800031:android:2022e70c231b3e398d7aaa",
+        "android_client_info": {
+          "package_name": "com.example.articulinarytfg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936030800031-5kgi82lpfu4te50va0trss30kg9jggpa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANF5LDiDaAe5YQXy-X8Nf9EC1ub-s66do"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936030800031-5kgi82lpfu4te50va0trss30kg9jggpa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
