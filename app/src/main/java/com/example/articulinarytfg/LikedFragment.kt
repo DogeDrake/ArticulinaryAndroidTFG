@@ -1,5 +1,6 @@
 package com.example.articulinarytfg
 
+import AdapterLiked
 import AdapterMainFragment
 import android.os.Bundle
 import android.util.Log
@@ -8,24 +9,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.SearchView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.articulinarytfg.ApiRest.initService
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Locale.filter
 
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class LikedFragment : Fragment(R.layout.fragment_liked) {
 
-    private lateinit var adapter: AdapterMainFragment
+
+    private lateinit var adapter: AdapterLiked
     val TAG = "MainActivity"
     var datos: ArrayList<RecetasPopulateResponse.Data> = ArrayList()
 
@@ -39,26 +37,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         initService()
         getUserRutinesPopualte()
 
-        // Obtener referencia al EditText
-       val searchBar = view.findViewById<EditText>(R.id.searchBar)
 
-        val bottomNavigationView =
-            view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-
-
-        // Escuchar evento de clic en el EditText
-        searchBar.setOnClickListener {
-            // Cambiar a la pantalla SearchFragment
-            fragmentManager?.beginTransaction()
-                ?.replace(R.id.container, SearchFragment())
-                ?.commit()
-            //bottomNavigationView.selectedItemId = 2
-        }
-
-
-
-        adapter = AdapterMainFragment(datos) { recepee ->
+        adapter = AdapterLiked(datos) { recepee ->
             // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
             activity?.let {
                 val fragment = MainDetailedFragment()
@@ -69,7 +49,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     ?.replace(R.id.container, fragment)?.commit()
             }
         }
-        val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RvMainPage)
+        val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVLiked)
 
         mainRecyclerView?.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -110,5 +90,4 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
         })
     }
-
 }

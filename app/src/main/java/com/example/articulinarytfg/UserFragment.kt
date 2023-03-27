@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -45,17 +46,36 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             val userResponse = getUser(value!!)
             var tvUsername = view.findViewById<TextView>(R.id.example1_TV)
             var tvRealname = view.findViewById<TextView>(R.id.example2_TV)
-            var tvMail = view.findViewById<TextView>(R.id.example3_TV)
+            //var tvMail = view.findViewById<TextView>(R.id.example3_TV)
             Log.i("ErrorUser", "Onview")
 
             username = userResponse[0].username
             realname = userResponse[0].realName
             mail = userResponse[0].email
 
-            tvUsername.text = username
+            tvUsername.text = "@" + username
             tvRealname.text = realname
-            tvMail.text = mail
+            //tvMail.text = mail
         }
+
+        var UserEditUser = view.findViewById<Button>(R.id.UserEditUser)
+        var UserCreateRecipe = view.findViewById<Button>(R.id.UserCreateRecipe)
+        var UserInfoApp = view.findViewById<Button>(R.id.UserInfoApp)
+
+
+        UserEditUser.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, EditUserFragment())?.commit()
+        }
+        UserCreateRecipe.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, UploadRecipeFragment())?.commit()
+        }
+        UserInfoApp.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, AjustesFragment())?.commit()
+        }
+
     }
 
     private suspend fun getUser(id: String): UserResponse {

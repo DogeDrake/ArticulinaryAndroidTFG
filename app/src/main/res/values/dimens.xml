@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="edit_text_margin">8dp</dimen>
+    <dimen name="text_input_box_corner_radius">10</dimen>
+    <dimen name="text_input_box_stroke_width">10</dimen>
 </resources>

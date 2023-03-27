@@ -106,6 +106,18 @@ class MainActivity : AppCompatActivity() {
                         .replace(R.id.container, UserFragment())
                         .commit()
                 }
+
+                R.id.searchmenu -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, SearchFragment())
+                        .commit()
+                }
+
+                R.id.transformmenu -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, LikedFragment())
+                        .commit()
+                }
                 /*
                 R.id.usermenu -> replaceFragment(UserFragment())
                 */
@@ -173,7 +185,7 @@ class MainActivity : AppCompatActivity() {
 
     private var previousFragment: Fragment? = null
 
-
+/*
     override fun onBackPressed() {
         if (supportFragmentManager.findFragmentById(R.id.container) is MainFragment) {
             finishAffinity()
@@ -181,6 +193,8 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+ */
 
 
     //metodo de cambio de vista entre fragments

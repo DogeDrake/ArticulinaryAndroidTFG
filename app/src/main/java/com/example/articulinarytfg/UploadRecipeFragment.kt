@@ -4,6 +4,9 @@ package com.example.articulinarytfg
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Color.red
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -12,17 +15,23 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.storage.FirebaseStorage
 import retrofit2.Call
 import retrofit2.Callback
@@ -65,6 +74,18 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
                 }
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // obtiene el controlador de navegación
+                    val navHostFragment =
+                        requireActivity().supportFragmentManager.findFragmentById(R.id.MainFragment) as NavHostFragment
+                    // llama al método para volver al fragmento anterior
+                    navHostFragment.navController.popBackStack("MainFragment", false)
+                }
+            })
 /*
         view.findViewById<Button>(R.id.btnCamara).setOnClickListener {
             startCamera()
@@ -87,11 +108,22 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).findViewById<NavigationView>(R.id.bottomNavigationView).isVisible =
+            false
         (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isGone =
             true
 
-        (activity as MainActivity).findViewById<NavigationView>(R.id.bottomNavigationView).isVisible =
-            false
+
+        val ToolBarDetail =
+            view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.TopToolBarUpload)
+
+        (activity as AppCompatActivity).setSupportActionBar(ToolBarDetail)
+
+        (activity as AppCompatActivity).supportActionBar?.title =
+            "Subir una Receta"
+
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         ingredientesLayout = view.findViewById(R.id.ingredientesLayout)
         pasosLayout = view.findViewById(R.id.PasosLayout)
@@ -117,8 +149,17 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
 
         val saveButton: Button = view.findViewById(R.id.saveButton)
 
-        saveButton.setOnClickListener {
 
+        var SalirRecipe = view.findViewById<Button>(R.id.SalirRecetas)
+
+
+        SalirRecipe.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, MainFragment())?.commit()
+        }
+
+        saveButton.setOnClickListener {
+/*
             val ingredientes = mutableListOf<String>()
             for (i in 0 until ingredientesLayout.childCount) {
                 val view = ingredientesLayout.getChildAt(i)
@@ -132,6 +173,36 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
                 val view = pasosLayout.getChildAt(i)
                 if (view is EditText) {
                     pasos.add(view.text.toString())
+                }
+            }
+
+ */
+
+            val ingredientes = mutableListOf<String>()
+            for (i in 0 until ingredientesLayout.childCount) {
+                val child = ingredientesLayout.getChildAt(i)
+                if (child is LinearLayout) {
+                    val editText = child.getChildAt(0) as? EditText
+                    editText?.let {
+                        val texto = editText.text.toString().trim()
+                        if (texto.isNotEmpty()) {
+                            ingredientes.add(texto)
+                        }
+                    }
+                }
+            }
+
+            val pasos = mutableListOf<String>()
+            for (i in 0 until pasosLayout.childCount) {
+                val child = pasosLayout.getChildAt(i)
+                if (child is LinearLayout) {
+                    val editText = child.getChildAt(0) as? EditText
+                    editText?.let {
+                        val texto = editText.text.toString().trim()
+                        if (texto.isNotEmpty()) {
+                            pasos.add(texto)
+                        }
+                    }
                 }
             }
 
@@ -149,31 +220,56 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
 
             Log.i("Ingredientes", "Ingredientes guardados: $listaEnumeradaIngredientes")
             Log.i("Pasos", "Pasos guardados: $listaEnumeradaPasos")
-            //comprobar que nada sea null
-            postRecipe(
-                ETTitulo.text.toString(),
-                ETGente.text.toString().toInt(),
-                ETTiempo.text.toString().toInt(),
-                imageString,
-                listaEnumeradaPasos,
-                listaEnumeradaIngredientes,
-                value.toString().toInt()
-            )
+
+
+            if (ETTitulo.text.isNullOrBlank() or ETGente.text.isNullOrBlank() or ETTiempo.text.isNullOrBlank() or listaEnumeradaPasos.isNullOrBlank() or listaEnumeradaIngredientes.isNullOrBlank() or imageString.isNullOrBlank()) {
+//Error2
+            } else {
+
+                //comprobar que nada sea null
+                postRecipe(
+                    ETTitulo.text.toString(),
+                    ETGente.text.toString().toInt(),
+                    ETTiempo.text.toString().toInt(),
+                    imageString,
+                    listaEnumeradaPasos,
+                    listaEnumeradaIngredientes,
+                    value.toString().toInt()
+                )
+
+                fragmentManager?.beginTransaction()
+                    ?.replace(R.id.container, MainFragment())
+                    ?.commit()
+            }
         }
     }
 
     // Método para agregar un nuevo EditText y un botón de eliminación al LinearLayout
     private fun addEditTextIngredientes() {
-        val editText = EditText(context)
+        val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.HORIZONTAL
         val layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.edit_text_margin)
-        editText.layoutParams = layoutParams
+        linearLayout.layoutParams = layoutParams
+
+        val editText = EditText(context)
+        val editTextLayoutParams = LinearLayout.LayoutParams(
+            0,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            1.0f
+        )
+        editText.layoutParams = editTextLayoutParams
 
         // Crear un botón de eliminación
         val deleteButton = Button(context)
+        val buttonLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        deleteButton.layoutParams = buttonLayoutParams
         deleteButton.setCompoundDrawablesWithIntrinsicBounds(
             R.drawable.ic_baseline_delete_forever_24, // Icono de eliminar
             0, // Sin icono a la izquierda del texto
@@ -181,29 +277,42 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
             0 // Sin icono debajo del texto
         )
         deleteButton.setOnClickListener {
-            // Remover el EditText y el botón de eliminación del LinearLayout
-            ingredientesLayout.removeView(editText)
-            ingredientesLayout.removeView(deleteButton)
+            // Remover el EditText, el botón de eliminación y el LinearLayout que los contiene
+            ingredientesLayout.removeView(linearLayout)
         }
 
         // Agregar el EditText y el botón de eliminación al LinearLayout
-        ingredientesLayout.addView(editText)
-        ingredientesLayout.addView(deleteButton)
+        linearLayout.addView(editText)
+        editText.hint = "Ingrediente"
+        linearLayout.addView(deleteButton)
+        ingredientesLayout.addView(linearLayout)
     }
 
     private fun addEditTextPasos() {
-        val editText = EditText(context)
+        val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.HORIZONTAL
         val layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.edit_text_margin)
-        editText.layoutParams = layoutParams
+        linearLayout.layoutParams = layoutParams
+
+        val editText = EditText(context)
+        val editTextLayoutParams = LinearLayout.LayoutParams(
+            0,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            1.0f
+        )
+        editText.layoutParams = editTextLayoutParams
 
         // Crear un botón de eliminación
         val deleteButton = Button(context)
-        //deleteButton.setText(R.string.delete)
-        deleteButton.gravity = Gravity.CENTER
+        val buttonLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        deleteButton.layoutParams = buttonLayoutParams
         deleteButton.setCompoundDrawablesWithIntrinsicBounds(
             R.drawable.ic_baseline_delete_forever_24, // Icono de eliminar
             0, // Sin icono a la izquierda del texto
@@ -211,14 +320,15 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
             0 // Sin icono debajo del texto
         )
         deleteButton.setOnClickListener {
-            // Remover el EditText y el botón de eliminación del LinearLayout
-            pasosLayout.removeView(editText)
-            pasosLayout.removeView(deleteButton)
+            // Remover el EditText, el botón de eliminación y el LinearLayout que los contiene
+            pasosLayout.removeView(linearLayout)
         }
 
         // Agregar el EditText y el botón de eliminación al LinearLayout
-        pasosLayout.addView(editText)
-        pasosLayout.addView(deleteButton)
+        linearLayout.addView(editText)
+        editText.hint = "Pasos"
+        linearLayout.addView(deleteButton)
+        pasosLayout.addView(linearLayout)
     }
 
 

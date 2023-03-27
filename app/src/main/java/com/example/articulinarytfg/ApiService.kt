@@ -2,10 +2,7 @@ package com.example.articulinarytfg
 
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @GET("Recetas?populate=*")
@@ -43,4 +40,11 @@ interface ApiService {
     fun getUser(
         @Query("filters[id]") id: String
     ): Call<UserResponse>
+
+    @PUT("users/{id}")
+    fun updateUser(
+        @Path("id") userId: Int, @Body userData: User
+    ): Call<UserResponsePopulate>
+
+
 }

@@ -13,38 +13,19 @@ import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AdapterMainFragment(
+class AdapterLiked(
 
     private val data: ArrayList<RecetasPopulateResponse.Data>,
     val onCLick: (RecetasPopulateResponse.Data) -> Unit
 ) :
-    RecyclerView.Adapter<AdapterMainFragment.ViewHolder>() {
+    RecyclerView.Adapter<AdapterLiked.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_list_view, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.favcardview, parent, false)
         return ViewHolder(view)
     }
 
     private var filteredList: ArrayList<RecetasPopulateResponse.Data> = data
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun filter(text: String) {
-        filteredList.clear()
-        if (text.isEmpty()) {
-            filteredList.addAll(data)
-        } else {
-            val search = text.lowercase()
-
-            for (item in data) {
-                if (item.attributes.titulo.lowercase().contains(search)) {
-                    filteredList.add(item)
-                }
-            }
-        }
-
-        notifyDataSetChanged()
-    }
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data[position])
@@ -55,19 +36,16 @@ class AdapterMainFragment(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val Titulo = itemView.findViewById<TextView>(R.id.tvTitulo)
-        val Gente = itemView.findViewById<TextView>(R.id.tvGente)
-        val Tiempo = itemView.findViewById<TextView>(R.id.tvTiempo)
-        val User = itemView.findViewById<TextView>(R.id.tvUser)
+
+        val Titulo = itemView.findViewById<TextView>(R.id.title_text_view)
+        val User = itemView.findViewById<TextView>(R.id.username_text_view)
         val card = itemView.findViewById<CardView>(R.id.card)
-        val Imagen = itemView.findViewById<ImageView>(R.id.ImgItem)
+        val Imagen = itemView.findViewById<ImageView>(R.id.FavImageCard)
 
 
         @SuppressLint("SetTextI18n")
         fun bind(item: RecetasPopulateResponse.Data) {
             Titulo.text = item.attributes.titulo
-            Gente.text = "Para: " + item.attributes.gente.toString() + " Personas"
-            Tiempo.text = "Tiempo: " + item.attributes.tiempo.toString() + "'"
             User.text = "Por " + item.attributes.user.data.attributes.username
             //comprobar que nada sea null
             val imagen2 = item.attributes.imagen.toString()

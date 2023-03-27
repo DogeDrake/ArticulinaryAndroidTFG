@@ -4,49 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFE9E6"
     tools:context=".MainActivity">
 
-    <ScrollView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/TopToolBarUpload"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/Salmon"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="48dp">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="10dp"
             android:orientation="vertical">
 
             <EditText
                 android:id="@+id/ETTitulo"
+                style="@style/Subtitulo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:hint="Titulo Receta" />
-
-            <ImageView
-                android:id="@+id/myImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/medimanana"
-                android:clickable="true"
-                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/ETGente"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Gente" />
+                <ImageView
+                    android:id="@+id/myImage"
+                    android:layout_width="150dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/medimanana"
+                    android:clickable="true"
+                    android:scaleType="centerCrop" />
 
-                <EditText
-                    android:id="@+id/ETTiempo"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Tiempo" />
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/ETGente"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="Gente"
+                        android:padding="10dp" />
+
+                    <EditText
+                        android:id="@+id/ETTiempo"
+                        android:layout_width="245dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Tiempo"
+                        android:padding="10dp" />
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -56,9 +81,11 @@
                 android:id="@+id/ingredientesLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#81FFFFFF"
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Subtitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ingredientes" />
@@ -68,6 +95,7 @@
             <Button
                 android:id="@+id/addIngredientesButton"
                 android:layout_width="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:text="Agregar Ingrediente" />
 
@@ -75,9 +103,11 @@
                 android:id="@+id/PasosLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#81FFFFFF"
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Subtitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Pasos" />
@@ -87,15 +117,27 @@
             <Button
                 android:id="@+id/addPasosButton"
                 android:layout_width="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:text="Agregar Ingrediente" />
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="200dp"
+                android:backgroundTint="#A36F41"
                 android:text="Guardar" />
+
+            <Button
+                android:id="@+id/SalirRecetas"
+                android:layout_width="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="200dp"
+                android:backgroundTint="@color/Red"
+                android:text="Salir" />
 
         </LinearLayout>
     </ScrollView>

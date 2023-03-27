@@ -5,17 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFD0CB"
+    android:id="@+id/MainFragment"
     android:orientation="vertical"
     tools:context=".MainFragment">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/svSearch"
+    <EditText
+        android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@drawable/roundborder"
-        android:iconifiedByDefault="false"
-        android:queryHint="Buscar" />
+        android:layout_margin="10dp"
+        android:hint="Buscar recetas"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+        android:drawableLeft="@drawable/ic_baseline_search_24"
+        android:background="@drawable/searchdrawable"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColorHint="#a1a1a1"
+        android:textSize="16sp"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"
