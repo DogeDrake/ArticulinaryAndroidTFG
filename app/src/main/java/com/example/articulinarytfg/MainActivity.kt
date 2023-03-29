@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.homemenu -> if (supportFragmentManager.findFragmentById(R.id.container) !is MainFragment) {
                     // Si no estás en la pantalla, cargarla
-                    supportFragmentManager.beginTransaction()
+                    supportFragmentManager.beginTransaction().addToBackStack(null)
                         .replace(R.id.container, MainFragment())
                         .commit()
                 }
@@ -102,19 +102,19 @@ class MainActivity : AppCompatActivity() {
  */
                 R.id.usermenu -> if (supportFragmentManager.findFragmentById(R.id.container) !is UploadRecipeFragment) {
                     // Si no estás en la pantalla, cargarla
-                    supportFragmentManager.beginTransaction()
+                    supportFragmentManager.beginTransaction().addToBackStack(null)
                         .replace(R.id.container, UserFragment())
                         .commit()
                 }
 
                 R.id.searchmenu -> {
-                    supportFragmentManager.beginTransaction()
+                    supportFragmentManager.beginTransaction().addToBackStack(null)
                         .replace(R.id.container, SearchFragment())
                         .commit()
                 }
 
                 R.id.transformmenu -> {
-                    supportFragmentManager.beginTransaction()
+                    supportFragmentManager.beginTransaction().addToBackStack(null)
                         .replace(R.id.container, LikedFragment())
                         .commit()
                 }
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
         FAB1.setOnClickListener {
             Toast.makeText(this, "Edut Buton", Toast.LENGTH_SHORT).show()
-            supportFragmentManager.beginTransaction()
+            supportFragmentManager.beginTransaction().addToBackStack(null)
                 .replace(R.id.container, UploadRecipeFragment())
                 .commit()
             FAB.visibility = View.INVISIBLE

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +35,14 @@ class LikedFragment : Fragment(R.layout.fragment_liked) {
             true
         (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isVisible =
             true
-        initService()
+
+        val ToolBarDetail = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarliked)
+
+        (activity as AppCompatActivity).setSupportActionBar(ToolBarDetail)
+
+        (activity as AppCompatActivity).supportActionBar?.title =
+            "Tus Recetas Favoritas"
+
         getUserRutinesPopualte()
 
 

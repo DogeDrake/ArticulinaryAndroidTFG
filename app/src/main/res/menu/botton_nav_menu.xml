@@ -17,8 +17,8 @@
         -->
     <item
         android:id="@+id/transformmenu"
-        android:icon="@drawable/ic_outline_change_circle_24"
-        android:title="Transformar" />
+        android:icon="@drawable/ic_baseline_star_24"
+        android:title="Favoritas" />
     <item
         android:id="@+id/usermenu"
         android:icon="@drawable/ic_baseline_person_24"

@@ -3,36 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbaruser"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/Salmon" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:orientation="vertical" />
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <ImageView
-        android:id="@+id/profile_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:contentDescription="profile_image"
         android:src="@drawable/unknown" />
 
     <TextView
-        android:id="@+id/example1_TV"
+        android:id="@+id/DatoUserAgenoUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nombre Apellido"
@@ -40,18 +21,16 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/example2_TV"
+        android:id="@+id/DatoUserAgenoNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="usuario"
         android:textSize="16sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RVUSer"
+        android:id="@+id/RVUSerAgeno"
         tools:listitem="@layout/favcardview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_marginTop="10dp" />
-
 </LinearLayout>

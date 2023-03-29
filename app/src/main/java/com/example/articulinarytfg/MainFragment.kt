@@ -36,6 +36,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             true
         (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isVisible =
             true
+
+
         initService()
         getUserRutinesPopualte()
 

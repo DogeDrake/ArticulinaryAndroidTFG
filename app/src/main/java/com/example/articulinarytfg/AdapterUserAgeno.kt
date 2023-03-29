@@ -9,23 +9,22 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.articulinarytfg.R
 import com.example.articulinarytfg.RecetasPopulateResponse
+import com.example.articulinarytfg.UserResponsePopulate
 import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AdapterLiked(
+class AdapterUserAgeno(
 
-    private val data: ArrayList<RecetasPopulateResponse.Data>,
-    val onCLick: (RecetasPopulateResponse.Data) -> Unit
+    private val data: ArrayList<UserResponsePopulate.UserResponsePopulateItem>,
+    val onCLick: (UserResponsePopulate.UserResponsePopulateItem) -> Unit
 ) :
-    RecyclerView.Adapter<AdapterLiked.ViewHolder>() {
+    RecyclerView.Adapter<AdapterUserAgeno.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.favcardview, parent, false)
         return ViewHolder(view)
     }
-
-    private var filteredList: ArrayList<RecetasPopulateResponse.Data> = data
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data[position])
@@ -36,29 +35,27 @@ class AdapterLiked(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-
         val Titulo = itemView.findViewById<TextView>(R.id.title_text_view)
-        val User = itemView.findViewById<TextView>(R.id.username_text_view)
-        val card = itemView.findViewById<CardView>(R.id.favcard)
+        val Username = itemView.findViewById<TextView>(R.id.username_text_view)
         val Imagen = itemView.findViewById<ImageView>(R.id.FavImageCard)
+        val card = itemView.findViewById<CardView>(R.id.favcard)
 
 
-        @SuppressLint("SetTextI18n")
-        fun bind(item: RecetasPopulateResponse.Data) {
-            Titulo.text = item.attributes.titulo
-            User.text = "Por " + item.attributes.user.data.attributes.username
-            //comprobar que nada sea null
-            val imagen2 = item.attributes.imagen.toString()
+        fun bind(item: UserResponsePopulate.UserResponsePopulateItem) {
+            if (item.recetas.isNotEmpty()) {
+                Titulo.text = item.recetas[0].titulo
+                Username.text = item.username
+                //comprobar que nada sea null
+                val imagen2 = item.recetas[0].imagen
 
-            Picasso.get().load(imagen2)
-                .into(Imagen)
+                Picasso.get().load(imagen2)
+                    .into(Imagen)
 
-            card.setOnClickListener {
-                onCLick(item)
+                card.setOnClickListener {
+                    onCLick(item)
+                }
             }
         }
-
-
     }
 }
 

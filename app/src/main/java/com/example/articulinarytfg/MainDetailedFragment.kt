@@ -2,6 +2,7 @@ package com.example.articulinarytfg
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -21,7 +22,7 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isGone=
+        (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isGone =
             true
         val recetasBundle =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -75,6 +76,10 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
             0,
             0
         )
+
+        //Mover a la pantalla del usuario
+
+
         DetailTiempo.compoundDrawablePadding = 15
         DetailGente.compoundDrawablePadding = 15
 
@@ -86,6 +91,19 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
         val ImagenTop = recetasBundle?.attributes?.imagen.toString()
         Picasso.get().load(ImagenTop)
             .into(DetailImage)
+
+        DetailUser.setOnClickListener {
+            Log.i("String"," Semanda: "+ DetailUser.text.toString())
+            val bundle = Bundle()
+            bundle.putString("UserNamePage", DetailUser.text.toString())
+            val fragment = UserAgenoFragment()
+            fragment.arguments = bundle
+
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, fragment)?.commit()
+        }
+
+
     }
 /*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

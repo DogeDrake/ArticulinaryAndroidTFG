@@ -12,10 +12,16 @@ interface ApiService {
     @GET("Users")
     fun getUser(
     ): Call<UserResponse>
-/*
-    @POST("users")
-    fun createUser(@Body newUser: NewUser): Call<UserResponse.UserResponseItem>
- */
+
+    @GET("Users?populate=*")
+    fun getUsersPopulateResponsebyUsername(
+        @Query("filters[username]") username: String
+    ): Call<UserResponsePopulate>
+
+    /*
+        @POST("users")
+        fun createUser(@Body newUser: NewUser): Call<UserResponse.UserResponseItem>
+     */
 /*
     @POST("/auth/local/register")
     suspend fun createUser(
@@ -23,8 +29,6 @@ interface ApiService {
     ): Response<UserResponsePopulate>
 
  */
-
-
     @POST("users")
     fun registerUser(
         @Body user: User
@@ -39,6 +43,11 @@ interface ApiService {
     @GET("users")
     fun getUser(
         @Query("filters[id]") id: String
+    ): Call<UserResponse>
+
+    @GET("users")
+    fun getUserbyUserName(
+        @Query("filters[username]") username: String
     ): Call<UserResponse>
 
     @PUT("users/{id}")

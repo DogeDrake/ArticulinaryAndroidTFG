@@ -26,7 +26,6 @@
                 android:id="@+id/topDetailImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/imagen"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/gradient" />
@@ -41,8 +40,6 @@
                 android:theme="@style/Toolbar"
                 app:layout_collapseMode="pin"
                 app:subtitleTextColor="@color/Salmon" />
-
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
     <!--Contenedor de nuestra app que debe contener esta propiedad-->

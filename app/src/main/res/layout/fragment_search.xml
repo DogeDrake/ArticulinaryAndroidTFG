@@ -13,8 +13,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/Salmon"
         android:background="@drawable/roundborder"
+        android:backgroundTint="@color/Salmon"
         android:padding="8dp">
 
         <ImageView
@@ -35,11 +35,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_layout"
-        android:rowCount="3"
-        android:columnCount="2"
-        android:useDefaultMargins="true"
         android:alignmentMode="alignMargins"
-        android:columnOrderPreserved="false">
+        android:columnCount="2"
+        android:columnOrderPreserved="false"
+        android:rowCount="3"
+        android:useDefaultMargins="true">
 
         <Button
             android:layout_width="0dp"
@@ -47,7 +47,7 @@
             android:layout_row="0"
             android:layout_column="0"
             android:layout_columnWeight="1"
-            android:text="Botón 1"/>
+            android:text="Pollo" />
 
         <Button
             android:layout_width="0dp"
@@ -55,7 +55,7 @@
             android:layout_row="2"
             android:layout_column="1"
             android:layout_columnWeight="1"
-            android:text="Botón 2"/>
+            android:text="Lechuga" />
 
         <Button
             android:layout_width="0dp"
@@ -63,7 +63,7 @@
             android:layout_row="0"
             android:layout_column="1"
             android:layout_columnWeight="1"
-            android:text="Botón 3"/>
+            android:text="Huevo" />
 
         <Button
             android:layout_width="0dp"
@@ -71,7 +71,7 @@
             android:layout_row="1"
             android:layout_column="0"
             android:layout_columnWeight="1"
-            android:text="Botón 4"/>
+            android:text="Salmon" />
 
         <Button
             android:layout_width="0dp"
@@ -79,7 +79,7 @@
             android:layout_row="2"
             android:layout_column="0"
             android:layout_columnWeight="1"
-            android:text="Botón 5"/>
+            android:text="Aguacate" />
 
         <Button
             android:layout_width="0dp"
@@ -87,7 +87,7 @@
             android:layout_row="1"
             android:layout_column="1"
             android:layout_columnWeight="1"
-            android:text="Botón 6"/>
+            android:text="Guindilla" />
 
     </GridLayout>
 

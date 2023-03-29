@@ -218,14 +218,20 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
             var listaEnumeradaIngredientes = IngredientesString
             var listaEnumeradaPasos = Pasos
 
-            Log.i("Ingredientes", "Ingredientes guardados: $listaEnumeradaIngredientes")
-            Log.i("Pasos", "Pasos guardados: $listaEnumeradaPasos")
+            Log.i("SubirReceta", "Ingredientes guardados: $listaEnumeradaIngredientes")
+            Log.i("SubirReceta", "Pasos guardados: $listaEnumeradaPasos")
 
 
-            if (ETTitulo.text.isNullOrBlank() or ETGente.text.isNullOrBlank() or ETTiempo.text.isNullOrBlank() or listaEnumeradaPasos.isNullOrBlank() or listaEnumeradaIngredientes.isNullOrBlank() or imageString.isNullOrBlank()) {
+            if (ETTitulo.text.isNullOrBlank() or ETGente.text.isNullOrBlank() or ETTiempo.text.isNullOrBlank() or listaEnumeradaPasos.isNullOrBlank() or listaEnumeradaIngredientes.isNullOrBlank() /* or imageString.isNullOrBlank()*/) {
 //Error2
-            } else {
+                Log.i("SubirReceta", "Ingredientes guardados: $listaEnumeradaIngredientes")
+                Log.i("SubirReceta", "Pasos guardados: $listaEnumeradaPasos")
+                Log.i("SubirReceta", ETTitulo.text.toString())
+                Log.i("SubirReceta", ETGente.text.toString())
+                Log.i("SubirReceta", ETTiempo.text.toString())
+                Log.i("SubirReceta", "No se sube")
 
+            } else {
                 //comprobar que nada sea null
                 postRecipe(
                     ETTitulo.text.toString(),
@@ -240,6 +246,7 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
                 fragmentManager?.beginTransaction()
                     ?.replace(R.id.container, MainFragment())
                     ?.commit()
+                Log.i("SubirReceta", "Subido")
             }
         }
     }

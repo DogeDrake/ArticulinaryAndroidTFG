@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/addrecipe"
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="AñadirReceta"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/edituser"
+        android:icon="@drawable/ic_baseline_edit_24"
+        android:title="EditarUser"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/appinfo"
+        android:icon="@drawable/ic_baseline_info_24"
+        android:title="InfoApp"
+        app:showAsAction="always" />
+
+</menu>
