@@ -23,72 +23,87 @@
             android:src="@drawable/ic_baseline_search_24" />
 
         <EditText
-
+            android:id="@+id/etBuscar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Buscar" />
+            android:hint="Buscar"
+            android:inputType="text"
+            android:maxLines="1" />
 
     </LinearLayout>
 
-    <!-- 6 botones en una posición de 2 X 3 -->
-    <GridLayout
+    <!-- Filtros -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_layout"
-        android:alignmentMode="alignMargins"
-        android:columnCount="2"
-        android:columnOrderPreserved="false"
-        android:rowCount="3"
-        android:useDefaultMargins="true">
+        android:orientation="vertical">
 
-        <Button
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:text="Pollo" />
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Filtros"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:layout_width="0dp"
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_row="2"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:text="Lechuga" />
+            android:orientation="horizontal"
+            android:id="@+id/GrupoChip"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:text="Huevo" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVegano"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegano" />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:text="Salmon" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipVegetariano"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vegetariano" />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_row="2"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:text="Aguacate" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSinGluten"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sin Gluten" />
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:text="Guindilla" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSinLactosa"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sin Lactosa" />
 
-    </GridLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipBajoEnAzucar"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bajo en Azúcar" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RvSView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="250dp"
+        android:background="#FFFF"
+        android:clipToPadding="false"
+        android:paddingBottom="200dp" />
 
 </RelativeLayout>

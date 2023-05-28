@@ -17,6 +17,7 @@ import com.example.articulinarytfg.ApiRest.initService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +31,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     var datos: ArrayList<RecetasPopulateResponse.Data> = ArrayList()
 
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).findViewById<NavigationView>(R.id.bottomNavigationView).isVisible =
@@ -37,6 +39,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isVisible =
             true
 
+        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
+
+        val tab1 = tabLayout.newTab().setText("Ultimas")
+        val tab2 = tabLayout.newTab().setText("Mas Gustadas")
+
+        tabLayout.addTab(tab1)
+        tabLayout.addTab(tab2)
 
         initService()
         getUserRutinesPopualte()
@@ -46,7 +55,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val bottomNavigationView =
             view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
 
 
         // Escuchar evento de clic en el EditText

@@ -2,8 +2,9 @@ package com.example.articulinarytfg
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulateItem>() {
+class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulateItem>(){
     data class UserResponsePopulateItem(
         val blocked: Boolean,
         val confirmed: Boolean,
@@ -18,9 +19,9 @@ class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulate
         val role: Role,
         val updatedAt: String,
         @SerializedName("UserImg")
-        val userImg: Any,
+        val userImg: String,
         val username: String
-    ) : java.io.Serializable {
+    ):Serializable {
         data class Receta(
             val createdAt: String,
             @SerializedName("Gente")
@@ -30,6 +31,18 @@ class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulate
             val imagen: String,
             @SerializedName("IngredientesTexto")
             val ingredientesTexto: String,
+            @SerializedName("IsBajoEnAzucar")
+            val isBajoEnAzucar: Boolean,
+            @SerializedName("IsSinGluten")
+            val isSinGluten: Boolean,
+            @SerializedName("IsSinLactosa")
+            val isSinLactosa: Boolean,
+            @SerializedName("IsVegano")
+            val isVegano: Boolean,
+            @SerializedName("IsVegetariano")
+            val isVegetariano: Boolean,
+            @SerializedName("LikesID")
+            val likesID: String,
             @SerializedName("PasosTexto")
             val pasosTexto: String,
             val publishedAt: String,
@@ -38,8 +51,8 @@ class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulate
             @SerializedName("Titulo")
             val titulo: String,
             val updatedAt: String
-        ) : java.io.Serializable
-
+        ):Serializable
+    
         data class Role(
             val createdAt: String,
             val description: String,
@@ -47,7 +60,6 @@ class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulate
             val name: String,
             val type: String,
             val updatedAt: String
-        ) : java.io.Serializable
+        ):Serializable
     }
 }
-

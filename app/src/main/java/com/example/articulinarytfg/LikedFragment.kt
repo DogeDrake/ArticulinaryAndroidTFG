@@ -2,6 +2,7 @@ package com.example.articulinarytfg
 
 import AdapterLiked
 import AdapterMainFragment
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -23,7 +24,7 @@ import retrofit2.Response
 
 class LikedFragment : Fragment(R.layout.fragment_liked) {
 
-
+    var value: String? = "-1"
     private lateinit var adapter: AdapterLiked
     val TAG = "MainActivity"
     var datos: ArrayList<RecetasPopulateResponse.Data> = ArrayList()
@@ -45,8 +46,11 @@ class LikedFragment : Fragment(R.layout.fragment_liked) {
 
         getUserRutinesPopualte()
 
+        val sharedPreferences = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        value = sharedPreferences?.getString("user", "-1")
 
-        adapter = AdapterLiked(datos) { recepee ->
+
+        adapter = AdapterLiked(datos,value.toString()) { recepee ->
             // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
             activity?.let {
                 val fragment = MainDetailedFragment()

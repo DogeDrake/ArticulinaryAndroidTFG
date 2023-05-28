@@ -21,11 +21,11 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="50dp"
         android:id="@+id/RVLiked"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
         android:paddingBottom="100dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+       />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

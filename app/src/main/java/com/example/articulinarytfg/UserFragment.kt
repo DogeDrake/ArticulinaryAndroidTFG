@@ -92,14 +92,15 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             Log.i("ErrorUser", "Onview")
 
             username = userResponse[0].username
+            getUserRutinesPopualte(username)
             if (userResponse[0].realName.isNullOrBlank()) {
                 realname = " "
-                getUserRutinesPopualte(username)
+
                 mail = userResponse[0].email
                 tvUsername.text = "@" + username
                 tvRealname.text = realname
             } else {
-                getUserRutinesPopualte(username)
+
                 realname = userResponse[0].realName
                 mail = userResponse[0].email
                 tvUsername.text = "@" + username
@@ -109,30 +110,21 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         }
         val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
 
-        if (mainRecyclerView.adapter?.itemCount == 0) {
-            // RecyclerView está vacío, mostrar mensaje
+        adapter = AdapterUserAgeno(datos) { recepee ->
+            // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
+            activity?.let {
+                val fragment = MainDetailedFragment()
+                fragment.arguments = Bundle()
+                fragment.arguments?.putSerializable("recetas", recepee)
 
-        } else {
-            // RecyclerView no está vacío, mostrar elementos
-
-
-            adapter = AdapterUserAgeno(datos) { recepee ->
-                // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
-                activity?.let {
-                    val fragment = MainDetailedFragment()
-                    fragment.arguments = Bundle()
-                    fragment.arguments?.putSerializable("recetas", recepee)
-
-                    activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                        ?.replace(R.id.container, fragment)?.commit()
-                }
+                activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                    ?.replace(R.id.container, fragment)?.commit()
             }
-
-
-            mainRecyclerView?.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            mainRecyclerView?.adapter = adapter
         }
+
+        mainRecyclerView?.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        mainRecyclerView?.adapter = adapter
 
     }
 

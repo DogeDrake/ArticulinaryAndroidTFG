@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MainFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFD0CB"
-    android:id="@+id/MainFragment"
     android:orientation="vertical"
     tools:context=".MainFragment">
+
+
 
     <EditText
         android:id="@+id/searchBar"
@@ -21,89 +23,16 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textColorHint="#a1a1a1"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
-    <HorizontalScrollView
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:clipToPadding="false"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="Desayuno"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                app:cornerRadius="100dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="Media Mañana"
-                android:textAllCaps="false"
-                app:cornerRadius="100dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/Salmon"
-                android:text="Comida"
-                app:cornerRadius="100dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/Salmon"
-                android:text="Merienda"
-                app:cornerRadius="100dp" />
-
-            <com.google.android.material.button.MaterialButton
-
-                android:id="@+id/button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/Salmon"
-                android:text="Cena"
-                app:cornerRadius="100dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/Salmon"
-                android:text="Vegano"
-                app:cornerRadius="100dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="30dp"
-                android:backgroundTint="@color/Salmon"
-                android:text="Vegetariano"
-                app:cornerRadius="100dp" />
-
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:background="#FFFFFF"
+        app:tabIndicatorColor="#FF0000"
+        app:tabSelectedTextColor="#FF0000"
+        app:tabTextColor="#000000" />
 
     <ScrollView
         android:layout_width="match_parent"

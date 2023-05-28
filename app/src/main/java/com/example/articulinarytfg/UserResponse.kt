@@ -3,7 +3,7 @@ package com.example.articulinarytfg
 
 import com.google.gson.annotations.SerializedName
 
-class UserResponse : ArrayList<UserResponse.UserResponseItem>() {
+class UserResponse : ArrayList<UserResponse.UserResponseItem>(){
     data class UserResponseItem(
         val blocked: Boolean,
         val confirmed: Boolean,
@@ -16,7 +16,7 @@ class UserResponse : ArrayList<UserResponse.UserResponseItem>() {
         val realName: String,
         val updatedAt: String,
         @SerializedName("UserImg")
-        val userImg: Any,
+        val userImg: String,
         val username: String
-    ) : java.io.Serializable
+    ):java.io.Serializable
 }

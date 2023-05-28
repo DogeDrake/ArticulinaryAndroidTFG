@@ -5,8 +5,14 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
-    @GET("Recetas?populate=*")
+    @GET("Recetas?populate=*&pagination[limit]=80")
     fun getRecetasPopulateResponse(
+    ): Call<RecetasPopulateResponse>
+
+
+    @GET("Recetas?populate=*&pagination[limit]=80")
+    fun getRecetasPopulateResponseFilter(
+        @Query("filters[Titulo][$"+"containsi]") searchTerm: String
     ): Call<RecetasPopulateResponse>
 
     @GET("Users")
