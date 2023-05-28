@@ -46,19 +46,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         val etSearch = view.findViewById<EditText>(R.id.etBuscar)
 
         // Configurar Listener de texto para el campo de búsqueda
@@ -66,7 +53,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val searchQuery = s.toString()
-
                 getUserRutinesPopualteFilters(searchQuery)
                 adapter.filter(searchQuery)
             }
@@ -78,20 +64,34 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
 
         val chipVegano = view.findViewById<Chip>(R.id.chipVegano)
-        val chipVegetariano = view.findViewById<Chip>(R.id.chipVegetariano)
-        val chipSinGluten = view.findViewById<Chip>(R.id.chipSinGluten)
-        val chipSinLactosa = view.findViewById<Chip>(R.id.chipSinLactosa)
-        val chipBajoEnAzucar = view.findViewById<Chip>(R.id.chipBajoEnAzucar)
-
-
-        val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
-
-        chipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val checkedChips = chipGroup.checkedChipIds
-            filterDataByChips(checkedChips)
+        chipVegano.setOnCheckedChangeListener { _, isChecked ->
+            isVeganoSelected = isChecked
+            applyFilters()
         }
 
+        val chipVegetariano = view.findViewById<Chip>(R.id.chipVegetariano)
+        chipVegetariano.setOnCheckedChangeListener { _, isChecked ->
+            isVegetarianoSelected = isChecked
+            applyFilters()
+        }
 
+        val chipSinGluten = view.findViewById<Chip>(R.id.chipSinGluten)
+        chipSinGluten.setOnCheckedChangeListener { _, isChecked ->
+            isSinGlutenSelected = isChecked
+            applyFilters()
+        }
+
+        val chipSinLactosa = view.findViewById<Chip>(R.id.chipSinLactosa)
+        chipSinLactosa.setOnCheckedChangeListener { _, isChecked ->
+            isSinLactosaSelected = isChecked
+            applyFilters()
+        }
+
+        val chipBajoEnAzucar = view.findViewById<Chip>(R.id.chipBajoEnAzucar)
+        chipBajoEnAzucar.setOnCheckedChangeListener { _, isChecked ->
+            isBajoEnAzucarSelected = isChecked
+            applyFilters()
+        }
 
 
         val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RvSView)
@@ -100,11 +100,29 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         mainRecyclerView?.adapter = adapter
 
+        val chipGroup = view.findViewById<ChipGroup>(R.id.GrupoChip)
+        chipGroup.setOnCheckedChangeListener { group, checkedId ->
+            val chip = group.findViewById<Chip>(checkedId)
+            if (chip != null) {
+                // Verificar si el chip está seleccionado o no
+                val isChecked = chip.isChecked
 
+                // Aquí actualizas la selección según el chip deseleccionado
+                when (chip.id) {
+                    R.id.chipVegano -> isVeganoSelected = isChecked
+                    R.id.chipVegetariano -> isVegetarianoSelected = isChecked
+                    R.id.chipSinGluten -> isSinGlutenSelected = isChecked
+                    R.id.chipSinLactosa -> isSinLactosaSelected = isChecked
+                    R.id.chipBajoEnAzucar -> isBajoEnAzucarSelected = isChecked
+                }
+
+                // Aplicar los filtros
+                applyFilters()
+            }
+        }
 
 
     }
-
 
 
     private fun getUserRutinesPopualte() {
@@ -141,6 +159,25 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         })
     }
 
+    private fun applyFilters() {
+        val filteredList = ArrayList<RecetasPopulateResponse.Data>()
+
+        for (item in datos) {
+            val isVegano = isVeganoSelected && item.attributes.isVegano
+            val isVegetariano = isVegetarianoSelected && item.attributes.isVegetariano
+            val isSinGluten = isSinGlutenSelected && item.attributes.isSinGluten
+            val isSinLactosa = isSinLactosaSelected && item.attributes.isSinLactosa
+            val isBajoEnAzucar = isBajoEnAzucarSelected && item.attributes.isBajoEnAzucar
+
+            if (isVegano || isVegetariano || isSinGluten || isSinLactosa || isBajoEnAzucar) {
+                filteredList.add(item)
+            }
+        }
+
+        adapter.updateData(filteredList)
+    }
+
+
     private fun getUserRutinesPopualteFilters(searchQuery: String) {
         val call = ApiRest.service.getRecetasPopulateResponseFilter(searchQuery)
         call.enqueue(object : Callback<RecetasPopulateResponse> {
@@ -154,12 +191,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     datos.clear()
                     datos.addAll(body.data)
                     Log.i(TAG, datos.toString())
-                    for (a in datos) {
-                        Log.i(TAG, "entroooo!!!!")
-                        //InfoRutinas.add(a.attributes.titulorutina)
-                        //InfoRutinas.add(a.attributes.publishedAt)
-                    }
-                    adapter?.notifyDataSetChanged()
+                    applyFilters() // Aplicar los filtros después de obtener los datos
                     // Imprimir aqui el listado con logs
                 } else {
                     Log.e(TAG, response.errorBody()?.string() ?: "Porto")

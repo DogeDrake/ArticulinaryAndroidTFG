@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -88,11 +90,14 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             val userResponse = getUser(value!!)
             var tvUsername = view.findViewById<TextView>(R.id.example1_TV)
             var tvRealname = view.findViewById<TextView>(R.id.example2_TV)
+            var userImage = view.findViewById<ImageView>(R.id.profile_image)
             //var tvMail = view.findViewById<TextView>(R.id.example3_TV)
             Log.i("ErrorUser", "Onview")
 
+
             username = userResponse[0].username
             getUserRutinesPopualte(username)
+            val imagen2 = userResponse[0].userImg.toString() ?: "userprofile.jpg"
             if (userResponse[0].realName.isNullOrBlank()) {
                 realname = " "
 
@@ -107,6 +112,10 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 tvRealname.text = realname
                 //tvMail.text = mail
             }
+
+
+            Picasso.get().load(imagen2)
+                .into(userImage)
         }
         val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
 

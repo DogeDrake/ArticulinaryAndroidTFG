@@ -27,6 +27,13 @@ class AdapterSearchFragment(
 
     private var filteredList: ArrayList<RecetasPopulateResponse.Data> = data
 
+
+    fun updateData(newData: List<RecetasPopulateResponse.Data>) {
+        data.clear()
+        data.addAll(newData)
+        notifyDataSetChanged()
+    }
+
     fun filter(text: String) {
         filteredList.clear()
         if (text.isEmpty()) {
