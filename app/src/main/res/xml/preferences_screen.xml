@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="privacy_policy"
+        android:title="Políticas de privacidad" />
+
+    <Preference
+        android:key="terms_and_conditions"
+        android:title="Términos y Condiciones" />
+
+    <Preference
+        android:key="faq"
+        android:title="Preguntas Frecuentes" />
+
+    <Preference
+        android:key="contact_us"
+        android:title="Contáctanos" />
+
+    <Preference
+        android:key="invite_friends"
+        android:title="Invita a amigos" />
+
+    <Preference
+        android:key="logout"
+        android:title="Cerrar Sesión" />
+
+</PreferenceScreen>

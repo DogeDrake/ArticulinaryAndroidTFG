@@ -5,7 +5,7 @@
     android:id="@+id/MainFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFD0CB"
+    android:background="@color/AntiqueWhite"
     android:orientation="vertical"
     tools:context=".MainFragment">
 
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:background="#FFDBD7">
+        android:background="@color/AntiqueWhite">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RvMainPage"

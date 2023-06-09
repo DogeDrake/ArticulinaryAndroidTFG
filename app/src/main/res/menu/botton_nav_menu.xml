@@ -15,6 +15,12 @@
         android:icon="@drawable/ic_baseline_add_24"
         android:title="Añadir" />
         -->
+
+    <item
+        android:id="@+id/placeholdermenu"
+        android:enabled="false"
+        android:title="" />
+
     <item
         android:id="@+id/transformmenu"
         android:icon="@drawable/ic_baseline_star_24"

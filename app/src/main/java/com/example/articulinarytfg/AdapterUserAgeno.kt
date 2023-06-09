@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -6,6 +7,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.articulinarytfg.R
+import com.example.articulinarytfg.RecetasPopulateResponse
 import com.example.articulinarytfg.UserResponsePopulate
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -39,20 +41,30 @@ class AdapterUserAgeno(
 
 
         fun bind(item: UserResponsePopulate.UserResponsePopulateItem) {
-            if (item.recetas.isNotEmpty()) {
-                Titulo.text = item.recetas[0].titulo
-                Username.text = item.username
-                //comprobar que nada sea null
-                val imagen2 = item.recetas[0].imagen
+            Titulo.text = item.recetas[0].titulo
+            //Gente.text = "Para: " + item.attributes.gente.toString() + " Personas"
+            //Tiempo.text = "Tiempo: " + item.attributes.tiempo.toString() + "'"
+            Username.text = "Por " + item.username
+            //comprobar que nada sea null
 
+
+            val imagen2 = item.recetas[0].imagen.toString() ?: ""
+
+            if (imagen2.isNotEmpty()) {
                 Picasso.get().load(imagen2)
                     .into(Imagen)
+            } else {
+                val defaultImageURL =
+                    "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg"
+                Picasso.get().load(defaultImageURL)
+                    .into(Imagen)
+            }
 
-                card.setOnClickListener {
-                    onCLick(item)
-                }
+            card.setOnClickListener {
+                onCLick(item)
             }
         }
+
     }
 }
 

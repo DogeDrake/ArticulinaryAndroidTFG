@@ -1,6 +1,7 @@
 package com.example.articulinarytfg
 
 import AdapterUserAgeno
+import AjustesFragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -96,7 +97,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
 
 
             username = userResponse[0].username
-            getUserRutinesPopualte(username)
+            getUserRutinesPopualte(value!!)
             val imagen2 = userResponse[0].userImg.toString() ?: "userprofile.jpg"
             if (userResponse[0].realName.isNullOrBlank()) {
                 realname = " "
@@ -150,8 +151,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         }
     }
 
-    private fun getUserRutinesPopualte(username: String) {
-        val call = ApiRest.service.getUsersPopulateResponsebyUsername(username)
+    private fun getUserRutinesPopualte(id: String) {
+        val call = ApiRest.service.getUsersPopulateResponsebyUsername(id.toInt())
         call.enqueue(object : Callback<UserResponsePopulate> {
             override fun onResponse(
                 call: Call<UserResponsePopulate>, response: Response<UserResponsePopulate>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFD0CB"
+    android:background="@color/AntiqueWhite"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/BurlyWood"
             app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:statusBarScrim="?attr/colorPrimaryVariant">
@@ -39,7 +39,7 @@
                 android:elevation="0dp"
                 android:theme="@style/Toolbar"
                 app:layout_collapseMode="pin"
-                app:subtitleTextColor="@color/Salmon" />
+                app:subtitleTextColor="@color/BurlyWood" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
     <!--Contenedor de nuestra app que debe contener esta propiedad-->
@@ -56,11 +56,11 @@
             android:textSize="20dp">
 
             <TextView
-                android:layout_margin="10dp"
                 android:id="@+id/DetailUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="10dp"
                 android:gravity="center"
                 android:textSize="20dp" />
 
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="#FFBAB3"
+                android:background="#EFC1A7"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="20dp">
@@ -89,6 +89,14 @@
                     android:gravity="right"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/favButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:src="@drawable/heartvoid24" />
+
             </LinearLayout>
 
             <TextView

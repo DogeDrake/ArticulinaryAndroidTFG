@@ -1,5 +1,6 @@
 package com.example.articulinarytfg
 
+import RegisterFragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
@@ -17,11 +20,16 @@ import androidx.core.view.isVisible
 import com.example.articulinarytfg.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.nimbusds.jwt.JWT
+import com.nimbusds.jwt.JWTClaimsSet
+import com.nimbusds.jwt.JWTParser
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.text.ParseException
 
 
 class LogInFragment : Fragment(R.layout.fragment_log_in) {
@@ -32,6 +40,7 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
     var idUser = ""
     lateinit var correo: String
     lateinit var contasena: String
+    lateinit var mainActivity: MainActivity
 /*
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,23 +63,118 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).findViewById<NavigationView>(R.id.bottomNavigationView).isVisible =
             false
+
+        (activity as MainActivity).findViewById<NavigationView>(R.id.bottomAppBar).isVisible =
+            false
+
         (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isVisible =
             false
+
+        mainActivity = activity as MainActivity
+
         //(activity as? AppCompatActivity)?.supportActionBar?.hide()
         ApiRest.initService()
-        getUsers()
-        view.findViewById<Button>(R.id.loginButton).setOnClickListener {
-            correo = view.findViewById<EditText>(R.id.etuserName).text.toString()
-            contasena = view.findViewById<EditText>(R.id.etpassword).text.toString()
-            if (correo == "" || (contasena) == "") {
-                // view.findViewById<TextView>(R.id.txtError).text = "RELLENE TODOS LOS CAMPOS"
-            } else {
-                if (correo in username) {
-                    val indexUser = username.indexOf(correo)
-                    Log.d(TAG, username[indexUser + 1])
-                    if ((contasena).equals(username[indexUser + 1])) {
-                        //loginUser()
-                        idUser = username[indexUser + 2]
+        //Comprobar si hay una sesión iniciada
+        var currentUserId = mainActivity.getCurrentUser()
+        if (currentUserId > 0) {
+            mainActivity.goToFragment(SearchFragment())
+        }
+        //Hacer Login al pulsar el botón
+        ApiRest.initService()
+        val btnLogin = view.findViewById<Button>(R.id.loginButton)
+        var email = view.findViewById<TextView>(R.id.etusername)
+        var password = view.findViewById<TextView>(R.id.etpassword)
+        btnLogin.setOnClickListener {
+
+            val emailA =password.text.toString()
+            val passwordA = password.text.toString()
+
+            login(emailA, passwordA)
+            //login("guillermovl@gmail.com", "Guille123")
+        }
+
+        val ButtonToRegis = view.findViewById<Button>(R.id.movetoregsiter_button)
+        val ButtonGoogle = view.findViewById<Button>(R.id.GoogleLogIn)
+
+
+        ButtonToRegis.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, RegisterFragment())?.commit()
+        }
+
+        //Radio Button Recuerdame
+        val checkremem = view.findViewById<CheckBox>(R.id.checkboxRecordar)
+        var isChecked = false
+        checkremem.setOnClickListener {
+            isChecked = !isChecked
+            checkremem.isChecked = isChecked
+        }
+
+        ButtonGoogle.setOnClickListener {
+            email.text = "leonardo"
+            password.text = "leonardo"
+        }
+
+
+    }
+
+    //Consulta para el Login
+    private fun login(usernameOrEmail: String, password: String) {
+        val credentials = ApiService.LoginCredentials(usernameOrEmail, password)
+        val call = ApiRest.service.login(credentials)
+        call.enqueue(object : Callback<ApiService.LoginResponse> {
+            override fun onResponse(
+                call: Call<ApiService.LoginResponse>, response: Response<ApiService.LoginResponse>
+            ) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    val tokenString = response.body()?.jwt
+                    try {
+                        saveLoginLocally(tokenString!!)
+                        mainActivity.goToFragment(MainFragment(), true)
+                    } catch (e: ParseException) {
+                        Log.e("LoginFragment", "Failed to parse JWT token: ${e.message}")
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val errorObject = errorJson.getJSONObject("error")
+                    val errorMessage = errorObject.getString("message")
+                    val tvError = view?.findViewById<TextView>(R.id.tvPasswordError)
+                    if (errorMessage == "identifier is a required field" || errorMessage == "password is a required field") {
+                        tvError?.text = "Rellena todos los campos"
+                    } else if (errorMessage == "Invalid identifier or password") {
+                        tvError?.text = "Usuario o contraseña incorrectos"
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<ApiService.LoginResponse>, t: Throwable) {
+                Log.e("LoginFragment", "Error en la solicitud de login: ${t.message}")
+            }
+
+        })
+    }
+
+    //Guardamos el id y el token en local
+    private fun saveLoginLocally(JWTtoken: String) {
+        //Sacar id del usuario loggeado con el token
+        val jwt: JWT = JWTParser.parse(JWTtoken)
+        val claimsSet: JWTClaimsSet = jwt.jwtClaimsSet
+        val idUser: Int? = claimsSet.getIntegerClaim("id")
+
+        val sharedPreferences = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("token", JWTtoken)
+        editor.putString("user", idUser.toString())
+        editor.apply()
+    }
+}
+
+
+/*
+idUser = username[indexUser + 2]
                         val sharedPreferences =
                             context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
                         sharedPreferences!!.edit().putString("user", idUser).apply()
@@ -84,108 +188,4 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
                                 .replace(R.id.container, fragment).commit()
                             (activity as? AppCompatActivity)?.supportActionBar?.show()
                         }
-
-                    } else {
-                        //  view.findViewById<TextView>(R.id.txtError).text = "CONTRASEÑA INCORRECTA"
-                    }
-                } else {
-                    //view.findViewById<TextView>(R.id.txtError).text = "CORREO INEXISTENTE"
-                }
-            }
-        }
-
-        val ButtonToRegis = view.findViewById<Button>(R.id.movetoregsiter_button)
-        val ButtonGoogle = view.findViewById<Button>(R.id.GoogleLogIn)
-        val UserName = view.findViewById<TextView>(R.id.etuserName)
-        val UserPassword = view.findViewById<TextView>(R.id.etpassword)
-
-
-
-
-        ButtonGoogle.setOnClickListener {
-
-            UserName.text = "leonardo"
-            UserPassword.text = "leonardo"
-        }
-
-        ButtonToRegis.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                ?.replace(R.id.container, RegisterFragment())?.commit()
-        }
-    }
-
-    /*
-    view.findViewById<Button>(R.id.btIrRegistro).setOnClickListener {
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container, RegistroFragment())?.addToBackStack(null)?.commit()
-
-    }
-
-    private fun hashPassword(password: String): String {
-        try {
-            val md = MessageDigest.getInstance("SHA-256")
-            val bytes = md.digest(password.toByteArray())
-            return bytes.joinToString("") { "%02x".format(it) }
-        } catch (e: NoSuchAlgorithmException) {
-            throw RuntimeException(e)
-        }
-    }
-
-// ...
-
-    val passwordFromUser = "password123"
-    val hashFromDatabase = "$2a$10$oXJ7HTBVW5mVS21NlK//ouC9SEfqsgVS9E4O1vYpaVAJv26N6mmVK"
-
-    val hashedPasswordFromUser = hashPassword(passwordFromUser)
-    if (hashedPasswordFromUser == hashFromDatabase) {
-        // contraseña correcta
-    } else {
-        // contraseña incorrecta
-    }
-
-
-}
-
-override fun onStop() {
-    super.onStop()
-    activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.isVisible = true
-
-}
  */
-
-
-    private fun getUsers() {
-
-        val call = ApiRest.service.getUser()
-        call.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(
-                call: Call<UserResponse>,
-                response: Response<UserResponse>
-            ) {
-                val body = response.body()
-                if (response.isSuccessful && body != null) {
-                    Log.i("bodypass", body.toString())
-                    datos.clear()
-                    datos.addAll(body) //.data
-
-                    for (a in datos) {
-                        Log.i(TAG, "entroooo!!!!")
-                        username.add(a.username)
-                        username.add(a.password)
-                        username.add(a.id.toString())
-                    }
-
-                    Log.d(TAG, username.toString())
-                    // Imprimir aqui el listado con logs
-                } else {
-                    Log.e(TAG, response.errorBody()?.string() ?: "Porto")
-                }
-            }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.e(TAG, t.message.toString())
-            }
-        })
-    }
-}
-

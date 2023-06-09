@@ -1,52 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:columnCount="1"
-    android:rowCount="1">
+    android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:layout_margin="0dp"
-        android:text="Políticas de privacidad" />
+    <GridLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="1"
+        android:rowCount="1">
 
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:layout_margin="0dp"
-        android:text="Términos y Condiciones" />
+        <!-- Botones del GridLayout -->
 
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:layout_margin="0dp"
-        android:text="Preguntas Frecuentes" />
+    </GridLayout>
 
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:layout_margin="0dp"
-        android:text="Contáctanos" />
-
-    <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:layout_margin="0dp"
-        android:text="Invita a amigos" />
-
-    <Button
-        android:id="@+id/btnCerrarSesion"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:layout_margin="0dp"
-        android:text="Cerrar Sesion" />
-
-</GridLayout>
+</FrameLayout>

@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import retrofit2.Call
@@ -33,6 +34,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getUserRutinesPopualte()
+
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
+
         adapter = AdapterSearchFragment(datos) { recepee ->
             // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
             activity?.let {

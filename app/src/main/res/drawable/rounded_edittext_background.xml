@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="30dp" /> <!-- Ajusta el valor del radio para controlar el grado de redondez -->
+    <solid android:color="#FFFFFF" /> <!-- Establece el color de fondo del TextInputEditText -->
+</shape>

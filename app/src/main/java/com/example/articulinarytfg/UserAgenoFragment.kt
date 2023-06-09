@@ -2,6 +2,7 @@ package com.example.articulinarytfg
 
 import AdapterMainFragment
 import AdapterUserAgeno
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ class UserAgenoFragment : Fragment(R.layout.fragment_user_ageno) {
     var mail: String = ""
     var myString = ""
     val TAG = "UserAgeno"
+    var value: String? = "-1"
     var datos: ArrayList<UserResponsePopulate.UserResponsePopulateItem> = ArrayList()
     private lateinit var adapter: AdapterUserAgeno
 
@@ -35,7 +37,8 @@ class UserAgenoFragment : Fragment(R.layout.fragment_user_ageno) {
         myString = arguments?.getString("UserNamePage").toString()
         Log.i("String", "Recibo: " + myString.toString())
 
-
+        val sharedPreferences = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        value = sharedPreferences?.getString("user", "-1")
 
 
         lifecycleScope.launch {
@@ -45,7 +48,7 @@ class UserAgenoFragment : Fragment(R.layout.fragment_user_ageno) {
             //var tvMail = view.findViewById<TextView>(R.id.example3_TV)
             Log.i("ErrorUser", "Onview")
             username = userResponse[0].username
-            getUserRutinesPopualte(username)
+            getUserRutinesPopualte(value!!.toInt())
             if (!userResponse[0].realName.equals(null)) {
                 realname = userResponse[0].realName
             } else {
@@ -95,8 +98,8 @@ class UserAgenoFragment : Fragment(R.layout.fragment_user_ageno) {
     }
 
 
-    private fun getUserRutinesPopualte(username: String) {
-        val call = ApiRest.service.getUsersPopulateResponsebyUsername(username)
+    private fun getUserRutinesPopualte(id: Int) {
+        val call = ApiRest.service.getUsersPopulateResponsebyUsername(id)
         call.enqueue(object : Callback<UserResponsePopulate> {
             override fun onResponse(
                 call: Call<UserResponsePopulate>,

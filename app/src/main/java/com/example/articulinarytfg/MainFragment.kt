@@ -1,12 +1,17 @@
 package com.example.articulinarytfg
 
 import AdapterMainFragment
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -31,13 +36,19 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     var datos: ArrayList<RecetasPopulateResponse.Data> = ArrayList()
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).findViewById<NavigationView>(R.id.bottomNavigationView).isVisible =
             true
+
         (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isVisible =
             true
+
+        (activity as MainActivity).findViewById<NavigationView>(R.id.bottomAppBar).isVisible =
+            true
+
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
 
@@ -50,21 +61,33 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         initService()
         getUserRutinesPopualte()
 
-        // Obtener referencia al EditText
-       val searchBar = view.findViewById<EditText>(R.id.searchBar)
-
-        val bottomNavigationView =
-            view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
 
-        // Escuchar evento de clic en el EditText
+        val searchBar = view.findViewById<EditText>(R.id.searchBar)
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        searchBar.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                searchBar.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
+                // Retrasar la apertura del SearchFragment para permitir que el teclado se oculte
+                fragmentManager?.beginTransaction()
+                    ?.replace(R.id.container, SearchFragment())
+                    ?.commit()
+                // Ocultar el teclado manualmente
+            }
+        }
         searchBar.setOnClickListener {
-            // Cambiar a la pantalla SearchFragment
+            searchBar.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
+            // Retrasar la apertura del SearchFragment para permitir que el teclado se oculte
             fragmentManager?.beginTransaction()
                 ?.replace(R.id.container, SearchFragment())
                 ?.commit()
-            //bottomNavigationView.selectedItemId = 2
+            // Ocultar el teclado manualmente
+
         }
+
+
 
 
 

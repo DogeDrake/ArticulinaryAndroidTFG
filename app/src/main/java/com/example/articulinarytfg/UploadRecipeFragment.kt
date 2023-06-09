@@ -74,7 +74,7 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
                 }
             }
         }
-
+/*
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -86,6 +86,8 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
                     navHostFragment.navController.popBackStack("MainFragment", false)
                 }
             })
+
+ */
 /*
         view.findViewById<Button>(R.id.btnCamara).setOnClickListener {
             startCamera()
@@ -107,11 +109,13 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+/*
         (activity as MainActivity).findViewById<NavigationView>(R.id.bottomNavigationView).isVisible =
             false
         (activity as MainActivity).findViewById<NavigationView>(R.id.fab).isGone =
             true
+            */
+
 
 
         val ToolBarDetail =
@@ -121,8 +125,10 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
 
         (activity as AppCompatActivity).supportActionBar?.title =
             "Subir una Receta"
-
+/*
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        */
+
 
 
         ingredientesLayout = view.findViewById(R.id.ingredientesLayout)
@@ -149,7 +155,7 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
 
         val saveButton: Button = view.findViewById(R.id.saveButton)
 
-
+/*
         var SalirRecipe = view.findViewById<Button>(R.id.SalirRecetas)
 
 
@@ -157,6 +163,8 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
                 ?.replace(R.id.container, MainFragment())?.commit()
         }
+
+ */
 
         saveButton.setOnClickListener {
 /*

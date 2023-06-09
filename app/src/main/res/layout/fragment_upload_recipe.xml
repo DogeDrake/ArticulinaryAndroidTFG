@@ -129,7 +129,7 @@
                 android:layout_marginBottom="200dp"
                 android:backgroundTint="#A36F41"
                 android:text="Guardar" />
-
+<!--
             <Button
                 android:id="@+id/SalirRecetas"
                 android:layout_width="wrap_content"
@@ -138,6 +138,7 @@
                 android:layout_marginBottom="200dp"
                 android:backgroundTint="@color/Red"
                 android:text="Salir" />
+                -->
 
         </LinearLayout>
     </ScrollView>

@@ -1,6 +1,7 @@
 package com.example.articulinarytfg
 
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,38 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private val rotateOpen: Animation by lazy {
-        AnimationUtils.loadAnimation(
-            this,
-            R.anim.rotate_open_anim
-        )
-    }
-    private val rotateClose: Animation by lazy {
-        AnimationUtils.loadAnimation(
-            this,
-            R.anim.rotate_close_anim
-        )
-    }
-    private val fromBottom: Animation by lazy {
-        AnimationUtils.loadAnimation(
-            this,
-            R.anim.from_bottom_anim
-        )
-    }
-    private val toBottom: Animation by lazy {
-        AnimationUtils.loadAnimation(
-            this,
-            R.anim.to_bottom_anim
-        )
-    }
-
-    private var clicked = false
-
     private lateinit var FAB: FloatingActionButton
-    private lateinit var FAB1: FloatingActionButton
-    private lateinit var FAB2: FloatingActionButton
-
+    private var clicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,19 +37,22 @@ class MainActivity : AppCompatActivity() {
         goToFragment(LogInFragment())
 
 
-        FAB = findViewById<FloatingActionButton>(R.id.fab)
-        FAB1 = findViewById<FloatingActionButton>(R.id.floatingActionButton)
-        FAB2 = findViewById<FloatingActionButton>(R.id.floatingActionButton2)
-
-
         //binding.bottomNavigationView.isVisible = view.isGone
 
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+        binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
             menuItem.setCheckable(false)
             val view = binding.bottomNavigationView.findViewById<View>(menuItem.itemId)
             view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.bottom_nav_elevation))
             menuItem.setCheckable(true)
             false
+        }
+
+        FAB = findViewById<FloatingActionButton>(R.id.fab)
+
+        FAB.setOnClickListener {
+            supportFragmentManager.beginTransaction().addToBackStack(null)
+                .replace(R.id.container, UploadRecipeFragment())
+                .commit()
         }
 
 
@@ -122,64 +96,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.usermenu -> replaceFragment(UserFragment())
                 */
             }
+
             true
         }
 
-        FAB.setOnClickListener {
-            onAddButtonClicked()
-        }
 
-        FAB1.setOnClickListener {
-            Toast.makeText(this, "Edut Buton", Toast.LENGTH_SHORT).show()
-            supportFragmentManager.beginTransaction().addToBackStack(null)
-                .replace(R.id.container, UploadRecipeFragment())
-                .commit()
-            FAB.visibility = View.INVISIBLE
-            setVisibility(clicked)
-        }
-        FAB2.setOnClickListener {
-            Toast.makeText(this, "Edut Buton", Toast.LENGTH_SHORT).show()
-
-        }
-    }
-
-    fun onAddButtonClicked() {
-        setVisibility(clicked)
-        setAnimation(clicked)
-        setClickeable(clicked)
-        clicked = !clicked
-    }
-
-    fun setAnimation(clicked: Boolean) {
-        if (!clicked) {
-            FAB1.visibility = View.VISIBLE
-            FAB2.visibility = View.VISIBLE
-        } else {
-            FAB1.visibility = View.INVISIBLE
-            FAB2.visibility = View.INVISIBLE
-        }
-    }
-
-    fun setVisibility(clicked: Boolean) {
-        if (!clicked) {
-            FAB2.startAnimation(fromBottom)
-            FAB1.startAnimation(fromBottom)
-            FAB.startAnimation(rotateOpen)
-        } else {
-            FAB2.startAnimation(toBottom)
-            FAB1.startAnimation(toBottom)
-            FAB.startAnimation(rotateClose)
-        }
-    }
-
-    private fun setClickeable(clicked: Boolean) {
-        if (!clicked) {
-            FAB1.isClickable = true
-            FAB2.isClickable = true
-        } else {
-            FAB1.isClickable = false
-            FAB2.isClickable = false
-        }
     }
 
 
@@ -214,6 +135,14 @@ class MainActivity : AppCompatActivity() {
             throw IllegalStateException("Activity $this does not have a NavController set on $host")
         }
     }
+
+    //Obtener el id del usuario loggeado (del local)
+    fun getCurrentUser(): Int {
+        val sharedPreferencesGet = this.getSharedPreferences("login", Context.MODE_PRIVATE)
+        //val getToken = sharedPreferencesGet.getString("token", "")
+        val getID = sharedPreferencesGet.getInt("userID", -1)
+        return getID
+    }
 /*
     fun goToFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
@@ -221,13 +150,12 @@ class MainActivity : AppCompatActivity() {
 
  */
 
-    fun goToFragment(fragment: Fragment) {
-        // Guardar una referencia al fragmento actual como el fragmento anterior
-        previousFragment = supportFragmentManager.findFragmentById(R.id.container)
-        // Reemplazar el fragmento actual con el nuevo fragmento
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            .addToBackStack(null)
-            .commit()
+    fun goToFragment(fragment: Fragment, addToBackStack: Boolean = false) {
+        val transaction =
+            supportFragmentManager.beginTransaction().replace(R.id.container, fragment)
+        if (addToBackStack) {
+            transaction.addToBackStack(null)
+        }
+        transaction.commit()
     }
 }
