@@ -10,16 +10,15 @@
     tools:context=".MainFragment">
 
 
-
     <EditText
         android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:hint="Buscar recetas"
+        android:background="@drawable/searchdrawable"
         android:drawableStart="@drawable/ic_baseline_search_24"
         android:drawableLeft="@drawable/ic_baseline_search_24"
-        android:background="@drawable/searchdrawable"
+        android:hint="Buscar recetas"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textColorHint="#a1a1a1"
@@ -34,19 +33,11 @@
         app:tabSelectedTextColor="#FF0000"
         app:tabTextColor="#000000" />
 
-    <ScrollView
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:background="@color/AntiqueWhite">
+        android:layout_height="match_parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RvMainPage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:clipToPadding="false"
-            android:paddingBottom="200dp" />
 
-    </ScrollView>
+
 </LinearLayout>

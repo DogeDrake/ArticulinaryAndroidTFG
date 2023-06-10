@@ -7,11 +7,13 @@ import java.io.Serializable
 data class RecetasPopulateResponse(
     val `data`: List<Data>,
     val meta: Meta
-):Serializable {
+) : Serializable {
     data class Data(
         val attributes: Attributes,
         val id: Int
-    ):Serializable {
+    ) : Serializable {
+        var likes: Int = 0
+
         data class Attributes(
             val createdAt: String,
             @SerializedName("Gente")
@@ -42,18 +44,18 @@ data class RecetasPopulateResponse(
             val titulo: String,
             val updatedAt: String,
             val user: User
-        ):Serializable {
+        ) : Serializable {
             data class Likes(
                 val `data`: List<Any>
             )
 
             data class User(
                 val `data`: Data
-            ):Serializable {
+            ) : Serializable {
                 data class Data(
                     val attributes: Attributes,
                     val id: Int
-                ):Serializable {
+                ) : Serializable {
                     data class Attributes(
                         val blocked: Boolean,
                         val confirmed: Boolean,
@@ -75,7 +77,7 @@ data class RecetasPopulateResponse(
 
     data class Meta(
         val pagination: Pagination
-    ):Serializable {
+    ) : Serializable {
         data class Pagination(
             val page: Int,
             val pageCount: Int,

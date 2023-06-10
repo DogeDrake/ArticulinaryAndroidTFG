@@ -1,6 +1,7 @@
 package com.example.articulinarytfg
 
 import AdapterMainFragment
+import FragmentFavRecipes
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
@@ -16,8 +17,12 @@ import android.widget.EditText
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.example.articulinarytfg.ApiRest.initService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarMenuView
@@ -47,10 +52,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         (activity as MainActivity).findViewById<NavigationView>(R.id.bottomAppBar).isVisible =
             true
 
-        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavigationView =
+            view.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
+        val viewpager2 = view.findViewById<ViewPager>(R.id.viewpager2)
 
         val tab1 = tabLayout.newTab().setText("Ultimas")
         val tab2 = tabLayout.newTab().setText("Mas Gustadas")
@@ -58,10 +65,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         tabLayout.addTab(tab1)
         tabLayout.addTab(tab2)
 
+
+        // Crear el adaptador de fragments para el ViewPager
+        val adapter = TabPagerAdapter(childFragmentManager)
+        viewpager2.adapter = adapter
+
+        // Conectar el TabLayout con el ViewPager
+        tabLayout.setupWithViewPager(viewpager2)
+
         initService()
-        getUserRutinesPopualte()
-
-
 
         val searchBar = view.findViewById<EditText>(R.id.searchBar)
         val inputMethodManager =
@@ -87,61 +99,30 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         }
 
-
-
-
-
-        adapter = AdapterMainFragment(datos) { recepee ->
-            // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
-            activity?.let {
-                val fragment = MainDetailedFragment()
-                fragment.arguments = Bundle()
-                fragment.arguments?.putSerializable("recetas", recepee)
-
-                activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                    ?.replace(R.id.container, fragment)?.commit()
-            }
-        }
-        val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RvMainPage)
-
-        mainRecyclerView?.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        mainRecyclerView?.adapter = adapter
     }
 
+    inner class TabPagerAdapter(fm: FragmentManager) :
+        FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    private fun getUserRutinesPopualte() {
-        val call = ApiRest.service.getRecetasPopulateResponse()
-        call.enqueue(object : Callback<RecetasPopulateResponse> {
-            override fun onResponse(
-                call: Call<RecetasPopulateResponse>,
-                response: Response<RecetasPopulateResponse>
-            ) {
-                val body = response.body()
-                if (response.isSuccessful && body != null) {
-                    Log.i(TAG, body.toString())
-                    datos.clear()
-                    datos.addAll(body.data)
-                    Log.i(TAG, datos.toString())
-                    for (a in datos) {
-                        Log.i(TAG, "entroooo!!!!")
-                        //InfoRutinas.add(a.attributes.titulorutina)
-                        //InfoRutinas.add(a.attributes.publishedAt)
-                    }
-                    adapter?.notifyDataSetChanged()
-                    // Imprimir aqui el listado con logs
-                } else {
-                    Log.e(TAG, response.errorBody()?.string() ?: "Porto")
-                }
+        override fun getItem(position: Int): Fragment {
+            return when (position) {
+                0 -> FragmentLastRecipes()
+                1 -> FragmentFavRecipes()
+                else -> throw IllegalArgumentException("Invalid tab position: $position")
             }
+        }
 
-            override fun onFailure(
-                call: Call<RecetasPopulateResponse>,
-                t: Throwable
-            ) {
-                Log.e(TAG, t.message.toString())
+        override fun getCount(): Int {
+            return 2 // Número total de pestañas
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return when (position) {
+                0 -> "Ultimas"
+                1 -> "Mas Gustadas"
+                else -> null
             }
-        })
+        }
     }
 
 }
