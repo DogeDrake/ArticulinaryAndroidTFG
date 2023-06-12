@@ -1,5 +1,6 @@
 package com.example.articulinarytfg
 
+import UserAgenoFragment
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -121,10 +122,12 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
         DetailIngredientes.text = recetasBundle?.attributes?.ingredientesTexto.toString()
         DetailPasos.text = recetasBundle?.attributes?.pasosTexto.toString()
         DetailUser.text = recetasBundle?.attributes?.user?.data?.attributes?.username.toString()
+        var UserId = recetasBundle?.attributes?.user?.data?.id.toString()
+
 
         postid = recetasBundle?.id!!
 
-        val ImagenTop = recetasBundle.attributes.imagen.toString() ?: ""
+        val ImagenTop = recetasBundle.attributes.imagen?.toString() ?: ""
 
         if (ImagenTop.isNotEmpty()) {
             Picasso.get().load(ImagenTop)
@@ -136,12 +139,10 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
                 .into(DetailImage)
         }
 
-
-
         DetailUser.setOnClickListener {
-            Log.i("String", " Semanda: " + DetailUser.text.toString())
+            Log.i("String", " Semanda: " + UserId)
             val bundle = Bundle()
-            bundle.putString("UserNamePage", DetailUser.text.toString())
+            bundle.putString("UserNamePage", UserId)
             val fragment = UserAgenoFragment()
             fragment.arguments = bundle
 

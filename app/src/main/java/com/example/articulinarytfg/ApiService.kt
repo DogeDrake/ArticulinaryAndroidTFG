@@ -65,6 +65,7 @@ interface ApiService {
             val confirmed: Boolean,
             val createdAt: String,
             val email: String,
+            val UserImg : String,
             val id: Int,
             val provider: String,
             val updatedAt: String,
@@ -75,7 +76,9 @@ interface ApiService {
     data class RegisterData(
         val email: String,
         val password: String,
-        val username: String
+        val username: String,
+        val UserImg : String
+
     )
 
     //Logear Usuario

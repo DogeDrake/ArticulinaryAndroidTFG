@@ -64,12 +64,12 @@ class AdapterMainFragment(
         val Imagen = itemView.findViewById<ImageView>(R.id.ImgItem)
 
 
-        @SuppressLint("SetTextI18n")
+
         fun bind(item: RecetasPopulateResponse.Data) {
             Titulo.text = item.attributes.titulo
             Gente.text = "Para: " + item.attributes.gente.toString() + " Personas"
             Tiempo.text = "Tiempo: " + item.attributes.tiempo.toString() + "'"
-            User.text = "Por " + item.attributes.user.data.attributes.username
+            User.text = "Por " + item.attributes.user.data.attributes.username.toString()
             //comprobar que nada sea null
             val imagen2 = item.attributes.imagen?.toString() ?: ""
 

@@ -21,13 +21,15 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="48dp">
+        android:paddingTop="48dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
+            android:layout_marginBottom="200dp"
             android:orientation="vertical">
 
             <EditText
@@ -95,8 +97,8 @@
             <Button
                 android:id="@+id/addIngredientesButton"
                 android:layout_width="wrap_content"
-                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:text="Agregar Ingrediente" />
 
             <LinearLayout
@@ -117,19 +119,18 @@
             <Button
                 android:id="@+id/addPasosButton"
                 android:layout_width="wrap_content"
-                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:text="Agregar Ingrediente" />
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
-                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="200dp"
+                android:layout_margin="100dp"
                 android:backgroundTint="#A36F41"
                 android:text="Guardar" />
-<!--
+            <!--
             <Button
                 android:id="@+id/SalirRecetas"
                 android:layout_width="wrap_content"

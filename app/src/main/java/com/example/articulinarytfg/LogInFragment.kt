@@ -86,9 +86,9 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
         var password = view.findViewById<TextView>(R.id.etpassword)
         btnLogin.setOnClickListener {
 
-            val emailA =password.text.toString()
+            val emailA =email.text.toString()
             val passwordA = password.text.toString()
-
+            Log.i("Log",(emailA.toString() +  passwordA.toString())).toString()
             login(emailA, passwordA)
             //login("guillermovl@gmail.com", "Guille123")
         }

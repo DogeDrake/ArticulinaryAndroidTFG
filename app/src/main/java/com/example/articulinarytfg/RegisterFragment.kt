@@ -16,6 +16,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     var UsernameUser = ""
     var MailUser = ""
     var PasswordUser = ""
+    var UserImage = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,7 +39,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         }
 
 
-
         val ETUsername = view.findViewById<EditText>(R.id.regis_username)
         val ETEmail = view.findViewById<EditText>(R.id.regis_email)
         val ETPassword = view.findViewById<EditText>(R.id.regis_password)
@@ -48,12 +48,14 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             UsernameUser = ETUsername.text.toString()
             MailUser = ETEmail.text.toString()
             PasswordUser = ETPassword.text.toString()
-            register(MailUser, PasswordUser, UsernameUser)
+            UserImage =
+                "https://firebasestorage.googleapis.com/v0/b/articullinary.appspot.com/o/notes%2Fimages%2Fuserimage.png?alt=media&token=dbf7c8dd-6759-4d20-a792-fc67eb9daea0&_gl=1*13s8vnk*_ga*NjczMjI0NTY4LjE2NzY1MzU5NjA.*_ga_CW55HF8NVT*MTY4NjQ5MzA3NC4yMC4xLjE2ODY0OTMzOTYuMC4wLjA."
+            register(MailUser, PasswordUser, UsernameUser, UserImage)
         }
     }
 
-    private fun register(email: String, password: String, username: String) {
-        val crearUser = ApiService.RegisterData(email, password, username)
+    private fun register(email: String, password: String, username: String, UserImg: String) {
+        val crearUser = ApiService.RegisterData(email, password, username, UserImg)
         val call = ApiRest.service.registerUser(crearUser)
         call.enqueue(object : Callback<ApiService.RegisterResponse> {
             override fun onResponse(

@@ -4,14 +4,13 @@ package com.example.articulinarytfg
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulateItem>(){
+class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulateItem>() {
     data class UserResponsePopulateItem(
         val blocked: Boolean,
         val confirmed: Boolean,
         val createdAt: String,
         val email: String,
         val id: Int,
-        val password: String,
         val provider: String,
         @SerializedName("RealName")
         val realName: String,
@@ -21,7 +20,7 @@ class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulate
         @SerializedName("UserImg")
         val userImg: String,
         val username: String
-    ):Serializable {
+    ) : Serializable {
         data class Receta(
             val createdAt: String,
             @SerializedName("Gente")
@@ -51,8 +50,8 @@ class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulate
             @SerializedName("Titulo")
             val titulo: String,
             val updatedAt: String
-        ):Serializable
-    
+        ) : Serializable
+
         data class Role(
             val createdAt: String,
             val description: String,
@@ -60,6 +59,6 @@ class UserResponsePopulate : ArrayList<UserResponsePopulate.UserResponsePopulate
             val name: String,
             val type: String,
             val updatedAt: String
-        ):Serializable
+        ) : Serializable
     }
 }

@@ -5,6 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiRest {
     lateinit var service: ApiService
+    //val URL = "http://192.168.31.2:1337/api/"
     val URL = "http://192.168.1.49:1337/api/"
 
     fun initService() {

@@ -1,22 +1,15 @@
-package com.example.articulinarytfg
-
-import AdapterUserAgeno
-import AjustesFragment
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.articulinarytfg.*
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,49 +17,39 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.nio.file.Files.delete
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
-
 
 class UserFragment : Fragment(R.layout.fragment_user) {
 
-    var value: String? = "-1"
-    var username: String = ""
-    var realname: String = ""
-    var mail: String = ""
-    val TAG = "UserProfile"
-    var datos: ArrayList<UserResponsePopulate.UserResponsePopulateItem> = ArrayList()
+    private var value: String? = null
+    private var username: String = ""
+    private var realname: String = ""
+    private var mail: String = ""
+    private val TAG = "UserProfile"
+    private var datos: ArrayList<RecetasPopulateResponse.Data> = ArrayList()
     private lateinit var adapter: AdapterUserAgeno
+    private lateinit var emptyTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
-
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbaruser)
-        // Establecer la toolbar como action bar
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        // Personalizar la action bar
         (activity as AppCompatActivity).supportActionBar?.apply {
             title = "Mi título"
         }
         return view
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.topbarmenu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -80,7 +63,6 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         return super.onOptionsItemSelected(item)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val sharedPreferences = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
@@ -92,36 +74,38 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             var tvUsername = view.findViewById<TextView>(R.id.example1_TV)
             var tvRealname = view.findViewById<TextView>(R.id.example2_TV)
             var userImage = view.findViewById<ImageView>(R.id.profile_image)
-            //var tvMail = view.findViewById<TextView>(R.id.example3_TV)
-            Log.i("ErrorUser", "Onview")
-
 
             username = userResponse[0].username
-            getUserRutinesPopualte(value!!)
-            val imagen2 = userResponse[0].userImg.toString() ?: "userprofile.jpg"
+            getUserRutinesPopulate(value.toString())
+
+            val imagen2 = userResponse[0].userImg?.toString() ?: "userprofile.jpg"
+
             if (userResponse[0].realName.isNullOrBlank()) {
                 realname = " "
-
                 mail = userResponse[0].email
                 tvUsername.text = "@" + username
                 tvRealname.text = realname
             } else {
-
                 realname = userResponse[0].realName
                 mail = userResponse[0].email
                 tvUsername.text = "@" + username
                 tvRealname.text = realname
-                //tvMail.text = mail
             }
 
-
-            Picasso.get().load(imagen2)
-                .into(userImage)
+            if (imagen2.isNotEmpty()) {
+                Picasso.get().load(imagen2)
+                    .into(userImage)
+            } else {
+                val defaultImageURL =
+                    "https://img.freepik.com/free-icon/user-image-with-black-background_318-34564.jpg?w=360"
+                Picasso.get().load(defaultImageURL)
+                    .into(userImage)
+            }
         }
-        val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
 
-        adapter = AdapterUserAgeno(datos) { recepee ->
-            // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
+        val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
+        emptyTextView = view.findViewById(R.id.emptyTextView)
+        adapter = AdapterUserAgeno(value, datos) { recepee ->
             activity?.let {
                 val fragment = MainDetailedFragment()
                 fragment.arguments = Bundle()
@@ -151,32 +135,40 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         }
     }
 
-    private fun getUserRutinesPopualte(id: String) {
-        val call = ApiRest.service.getUsersPopulateResponsebyUsername(id.toInt())
-        call.enqueue(object : Callback<UserResponsePopulate> {
+    private fun getUserRutinesPopulate(value: String) {
+        val call = ApiRest.service.getRecetasPopulateResponse()
+        call.enqueue(object : Callback<RecetasPopulateResponse> {
             override fun onResponse(
-                call: Call<UserResponsePopulate>, response: Response<UserResponsePopulate>
+                call: Call<RecetasPopulateResponse>, response: Response<RecetasPopulateResponse>
             ) {
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
                     Log.i(TAG, body.toString())
-                    datos.clear()
-                    datos.addAll(body)
-                    Log.i(TAG, datos.toString())
-                    for (a in datos) {
-                        Log.i(TAG, "entroooo!!!!")
-                        //InfoRutinas.add(a.attributes.titulorutina)
-                        //InfoRutinas.add(a.attributes.publishedAt)
+
+                    // Filtrar los datos en función de `value` y `idUsuario`
+                    val filteredData = body.data.filter { item ->
+                        value.toInt() == item.attributes.user.data.id
                     }
-                    adapter?.notifyDataSetChanged()
-                    // Imprimir aqui el listado con logs
+
+                    datos.clear()
+                    datos.addAll(filteredData)
+                    datos.sortByDescending { it.attributes.likesID?.toArrayList()?.size ?: 0 }
+                    adapter.notifyDataSetChanged()
+                    Log.i(TAG, datos.toString())
+
+                    // Mostrar u ocultar el TextView vacío según la cantidad de datos filtrados
+                    if (filteredData.isEmpty()) {
+                        emptyTextView.visibility = View.VISIBLE
+                    } else {
+                        emptyTextView.visibility = View.GONE
+                    }
                 } else {
                     Log.e(TAG, response.errorBody()?.string() ?: "Porto")
                 }
             }
 
             override fun onFailure(
-                call: Call<UserResponsePopulate>, t: Throwable
+                call: Call<RecetasPopulateResponse>, t: Throwable
             ) {
                 Log.e(TAG, t.message.toString())
             }
