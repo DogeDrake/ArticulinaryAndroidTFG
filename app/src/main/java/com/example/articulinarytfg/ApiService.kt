@@ -65,7 +65,7 @@ interface ApiService {
             val confirmed: Boolean,
             val createdAt: String,
             val email: String,
-            val UserImg : String,
+            val UserImg: String,
             val id: Int,
             val provider: String,
             val updatedAt: String,
@@ -77,7 +77,7 @@ interface ApiService {
         val email: String,
         val password: String,
         val username: String,
-        val UserImg : String
+        val UserImg: String
 
     )
 
@@ -98,13 +98,25 @@ interface ApiService {
 
 
     @PUT("recetas/{postId}")
-    fun updateLikesId(
+    fun updateLikes(
         @Path("postId") postId: Int,
-        @Body likesId: LikesIdOb
+        @Body requestBody: LikesIdRequest
     ): Call<RecetasResponse>
 
-    data class LikesIdOb(
-        val likesID: String
+
+    data class LikesIdRequest(
+        @SerializedName("data")
+        val data: Data
+    )
+
+    data class Data(
+        @SerializedName("attributes")
+        val attributes: Attributes
+    )
+
+    data class Attributes(
+        @SerializedName("LikesID")
+        val LikesID: String
     )
 
     @GET("users")

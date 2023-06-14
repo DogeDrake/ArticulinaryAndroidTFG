@@ -453,6 +453,7 @@ private fun postRecipe(
         ) {
             if (response.isSuccessful) {
                 val userResponse = response.body()
+                Log.e("Error", "Subido?: ${response.code()}")
                 // Update UI with user response
             } else {
                 Log.e("Error", "Error en la respuesta: ${response.code()}")

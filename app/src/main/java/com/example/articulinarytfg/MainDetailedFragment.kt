@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import com.example.articulinarytfg.ApiRest.service
 import com.google.android.material.navigation.NavigationView
+import com.google.gson.annotations.SerializedName
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -99,9 +100,6 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
         DetailGente.compoundDrawablePadding = 15
 
 
-
-
-
         //Ejemplo de LikeIDs = "0,3,4"
         val LikeIDs = recetasBundle?.attributes?.likesID?.toString()
         var listLike = LikeIDs?.toList()?.map { it.toString() } ?: emptyList()
@@ -161,7 +159,7 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
                 // Dislike
                 val likesId = stringLikeDislike
                 Log.i("Like", "Se ha dado DISLike, se ha subido $likesId")
-                LikeDislike(postid.toString(), likesId)
+                LikeDislike(likesId,postid)
             } else {
                 LikeButton.setImageResource(R.drawable.heartfull24)
                 isLiked = true
@@ -173,15 +171,18 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
                 val likesId = stringLikeDislike
                 // Like
                 Log.i("Like", "Se ha dado Like, se sube $likesId")
-                LikeDislike(postid.toString(), likesId)
+                LikeDislike(likesId,postid)
             }
         }
     }
 
-    private fun LikeDislike(postId: String, likesId: String) {
-        val attributes = ApiService.LikesIdOb(likesId)
-
-        val call = service.updateLikesId(postId.toInt(), attributes)
+    //LikeDislike
+    private fun LikeDislike(likesId: String, postId: Int) {
+        Log.i("Like", "Valor de likesId antes de la llamada a la API: $likesId") // Verificar el valor
+        val requestBody = ApiService.LikesIdRequest(ApiService.Data(ApiService.Attributes(LikesID = likesId)))
+        Log.i("Like", "Valor de requestBody antes de la llamada a la API: $requestBody") // Verificar el objeto requestBody
+        val call = service.updateLikes(postId, requestBody)
+        Log.i("Like", "Valor de call antes de la llamada a la API: ${call.toString()}") // Verificar el objeto call
         call.enqueue(object : Callback<RecetasResponse> {
             override fun onResponse(
                 call: Call<RecetasResponse>,
@@ -189,22 +190,21 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
             ) {
                 if (response.isSuccessful) {
                     val updatedResponse = response.body()
-                    val updatedData = updatedResponse?.data
-                    // Manejar la respuesta actualizada aquí
-                    Log.i("Like", "Se ha Actualizado la Api")
+                    Log.i("Like", "Se ha actualizado el campo LikesID en la API: $updatedResponse")
                 } else {
-                    // La solicitud no fue exitosa
-                    // Manejar el error aquí
                     val errorBody = response.errorBody()?.string()
                     Log.e("Like", "Error en la respuesta de la API: $errorBody")
                 }
             }
 
             override fun onFailure(call: Call<RecetasResponse>, t: Throwable) {
-                // Ocurrió un error durante la llamada
-                // Manejar el error aquí
-                Log.e("Like", "Error al Actualizar la Api")
+                Log.e("Like", "Error al actualizar el campo LikesID en la API " + t.toString())
             }
         })
     }
+
+
+
+
+
 }
