@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.core.view.isVisible
 import com.example.articulinarytfg.*
 import com.google.android.material.navigation.NavigationView
@@ -42,16 +43,70 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val ETUsername = view.findViewById<EditText>(R.id.regis_username)
         val ETEmail = view.findViewById<EditText>(R.id.regis_email)
         val ETPassword = view.findViewById<EditText>(R.id.regis_password)
+        val ETConfirmPassword = view.findViewById<EditText>(R.id.regis_confirm_password)
+        val errorText = view.findViewById<TextView>(R.id.error_text)
 
         val ButtonRegistrarse = view.findViewById<Button>(R.id.btn_register)
         ButtonRegistrarse.setOnClickListener {
             UsernameUser = ETUsername.text.toString()
             MailUser = ETEmail.text.toString()
             PasswordUser = ETPassword.text.toString()
+            val confirmPassword = ETConfirmPassword.text.toString()
             UserImage =
                 "https://firebasestorage.googleapis.com/v0/b/articullinary.appspot.com/o/notes%2Fimages%2Fuserimage.png?alt=media&token=dbf7c8dd-6759-4d20-a792-fc67eb9daea0&_gl=1*13s8vnk*_ga*NjczMjI0NTY4LjE2NzY1MzU5NjA.*_ga_CW55HF8NVT*MTY4NjQ5MzA3NC4yMC4xLjE2ODY0OTMzOTYuMC4wLjA."
-            register(MailUser, PasswordUser, UsernameUser, UserImage)
+
+            if (validateFields(UsernameUser, MailUser, PasswordUser, confirmPassword)) {
+                register(MailUser, PasswordUser, UsernameUser, UserImage)
+            }
         }
+    }
+
+    private fun validateFields(
+        username: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        val errorText = view?.findViewById<TextView>(R.id.error_text)
+
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            errorText?.text = "Todos los campos son obligatorios"
+            errorText?.visibility = View.VISIBLE
+            return false
+        }
+
+        if (password.length < 8) {
+            errorText?.text = "La contraseña debe tener al menos 8 caracteres"
+            errorText?.visibility = View.VISIBLE
+            return false
+        }
+
+        if (!password.matches(Regex(".*\\d.*"))) {
+            errorText?.text = "La contraseña debe contener al menos un número"
+            errorText?.visibility = View.VISIBLE
+            return false
+        }
+
+        if (!password.matches(Regex(".*[A-Z].*"))) {
+            errorText?.text = "La contraseña debe contener al menos una letra mayúscula"
+            errorText?.visibility = View.VISIBLE
+            return false
+        }
+
+        if (!password.matches(Regex(".*[a-z].*"))) {
+            errorText?.text = "La contraseña debe contener al menos una letra minúscula"
+            errorText?.visibility = View.VISIBLE
+            return false
+        }
+
+        if (password != confirmPassword) {
+            errorText?.text = "Las contraseñas no coinciden"
+            errorText?.visibility = View.VISIBLE
+            return false
+        }
+
+        errorText?.visibility = View.GONE
+        return true
     }
 
     private fun register(email: String, password: String, username: String, UserImg: String) {

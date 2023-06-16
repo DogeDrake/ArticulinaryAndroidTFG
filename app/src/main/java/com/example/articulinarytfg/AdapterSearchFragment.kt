@@ -19,6 +19,7 @@ class AdapterSearchFragment(
     val onCLick: (RecetasPopulateResponse.Data) -> Unit
 ) :
     RecyclerView.Adapter<AdapterSearchFragment.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.favcardview, parent, false)

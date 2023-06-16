@@ -1,5 +1,3 @@
-package com.example.articulinarytfg
-
 import RegisterFragment
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.example.articulinarytfg.*
 import com.example.articulinarytfg.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -41,22 +40,8 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
     lateinit var correo: String
     lateinit var contasena: String
     lateinit var mainActivity: MainActivity
-/*
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        (activity as MainActivity).findViewById<NavigationView>(R.id.bottomNavigationView).isVisible = false
-        val buttonnext =  view.findViewById<Button>(R.id.loginButton)
-        buttonnext.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                ?.replace(R.id.container, MainFragment())?.commit()
-            (activity as? AppCompatActivity)?.supportActionBar?.hide()
-        }
-
-    }
-
- */
-
+    lateinit var value: String
+    var checkbutShare: Boolean = false
 
     @SuppressLint("CutPasteId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,30 +57,33 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
 
         mainActivity = activity as MainActivity
 
-        //(activity as? AppCompatActivity)?.supportActionBar?.hide()
         ApiRest.initService()
+
         //Comprobar si hay una sesión iniciada
         var currentUserId = mainActivity.getCurrentUser()
         if (currentUserId > 0) {
             mainActivity.goToFragment(SearchFragment())
         }
+
         //Hacer Login al pulsar el botón
         ApiRest.initService()
         val btnLogin = view.findViewById<Button>(R.id.loginButton)
         var email = view.findViewById<TextView>(R.id.etusername)
         var password = view.findViewById<TextView>(R.id.etpassword)
-        btnLogin.setOnClickListener {
+        val tvError = view.findViewById<TextView>(R.id.tvPasswordError)
 
-            val emailA =email.text.toString()
+        btnLogin.setOnClickListener {
+            val emailA = email.text.toString()
             val passwordA = password.text.toString()
-            Log.i("Log",(emailA.toString() +  passwordA.toString())).toString()
-            login(emailA, passwordA)
-            //login("guillermovl@gmail.com", "Guille123")
+            login(emailA, passwordA, tvError)
         }
 
         val ButtonToRegis = view.findViewById<Button>(R.id.movetoregsiter_button)
         val ButtonGoogle = view.findViewById<Button>(R.id.GoogleLogIn)
 
+        val sharedPreferences = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        value = sharedPreferences?.getString("user", "-1").toString()
+        checkbutShare = sharedPreferences!!.getBoolean("check", false)
 
         ButtonToRegis.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
@@ -104,10 +92,17 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
 
         //Radio Button Recuerdame
         val checkremem = view.findViewById<CheckBox>(R.id.checkboxRecordar)
+
+
+        val guestButton = view.findViewById<Button>(R.id.guestLoginButton)
         var isChecked = false
+
         checkremem.setOnClickListener {
             isChecked = !isChecked
             checkremem.isChecked = isChecked
+            val editor = sharedPreferences?.edit()
+            editor?.putBoolean("check", isChecked)
+            editor?.apply()
         }
 
         ButtonGoogle.setOnClickListener {
@@ -115,22 +110,35 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
             password.text = "leonardo"
         }
 
+        guestButton.setOnClickListener {
+            val editor = sharedPreferences?.edit()
+            editor?.putString("user", "")
+            editor?.apply()
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, MainFragment())?.commit()
+        }
 
+        if (!value.isNullOrBlank() && checkbutShare == true) {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, MainFragment())?.commit()
+        }
     }
 
     //Consulta para el Login
-    private fun login(usernameOrEmail: String, password: String) {
+    private fun login(usernameOrEmail: String, password: String, tvError: TextView) {
         val credentials = ApiService.LoginCredentials(usernameOrEmail, password)
         val call = ApiRest.service.login(credentials)
         call.enqueue(object : Callback<ApiService.LoginResponse> {
             override fun onResponse(
-                call: Call<ApiService.LoginResponse>, response: Response<ApiService.LoginResponse>
+                call: Call<ApiService.LoginResponse>,
+                response: Response<ApiService.LoginResponse>
             ) {
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
                     val tokenString = response.body()?.jwt
+                    saveLoginLocally(tokenString!!)
                     try {
-                        saveLoginLocally(tokenString!!)
+
                         mainActivity.goToFragment(MainFragment(), true)
                     } catch (e: ParseException) {
                         Log.e("LoginFragment", "Failed to parse JWT token: ${e.message}")
@@ -140,13 +148,14 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
                     val errorJson = JSONObject(errorBody)
                     val errorObject = errorJson.getJSONObject("error")
                     val errorMessage = errorObject.getString("message")
-                    val tvError = view?.findViewById<TextView>(R.id.tvPasswordError)
-                    if (errorMessage == "identifier is a required field" || errorMessage == "password is a required field") {
-                        tvError?.text = "Rellena todos los campos"
-                    } else if (errorMessage == "Invalid identifier or password") {
-                        tvError?.text = "Usuario o contraseña incorrectos"
-                    }
 
+                    if (errorMessage == "identifier is a required field" || errorMessage == "password is a required field") {
+                        tvError.text = "Rellena todos los campos"
+                    } else if (errorMessage == "Invalid identifier or password") {
+                        tvError.text = "Usuario o contraseña incorrectos"
+                    } else {
+                        tvError.text = "Error, prueba a iniciar con una cuenta correcta"
+                    }
                 }
             }
 
@@ -163,7 +172,6 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
         val jwt: JWT = JWTParser.parse(JWTtoken)
         val claimsSet: JWTClaimsSet = jwt.jwtClaimsSet
         val idUser: Int? = claimsSet.getIntegerClaim("id")
-
         val sharedPreferences = requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("token", JWTtoken)
@@ -171,21 +179,3 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
         editor.apply()
     }
 }
-
-
-/*
-idUser = username[indexUser + 2]
-                        val sharedPreferences =
-                            context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-                        sharedPreferences!!.edit().putString("user", idUser).apply()
-                        activity?.let {
-                            val fragment = MainFragment()
-                            Log.d(TAG, idUser)
-                            fragment.arguments = Bundle().apply {
-                                putString("idUsuario", idUser)
-                            }
-                            it.supportFragmentManager.beginTransaction()
-                                .replace(R.id.container, fragment).commit()
-                            (activity as? AppCompatActivity)?.supportActionBar?.show()
-                        }
- */

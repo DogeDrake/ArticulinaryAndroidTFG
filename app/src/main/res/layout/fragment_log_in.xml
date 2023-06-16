@@ -130,4 +130,24 @@
         app:strokeColor="#E0E0E0"
         app:strokeWidth="2dp" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/guestLoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:text="Iniciar como invitado"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:cornerRadius="5dp"
+        app:strokeColor="@android:color/transparent"
+        app:strokeWidth="0dp"
+        app:iconPadding="8dp"
+        android:drawablePadding="0dp"
+        android:paddingBottom="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        />
+
+
+
 </LinearLayout>

@@ -12,6 +12,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.example.articulinarytfg.ApiRest.service
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.annotations.SerializedName
@@ -23,7 +25,7 @@ import retrofit2.Response
 
 class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
     var isLiked: Boolean = false
-    var value: String? = "-1"
+    var value: String? = ""
     var postid: Int = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +71,12 @@ class MainDetailedFragment : Fragment(R.layout.fragment_main_detailed) {
         val DetailPasos = view.findViewById<TextView>(R.id.DetailPasos)
         val DetailUser = view.findViewById<TextView>(R.id.DetailUser)
         val DetailImage = view.findViewById<ImageView>(R.id.topDetailImage)
+
         val LikeButton = view.findViewById<ImageButton>(R.id.favButton)
+
+        if(value.isNullOrBlank()){
+            LikeButton.setVisibility(View.INVISIBLE);
+        }
 
 
 

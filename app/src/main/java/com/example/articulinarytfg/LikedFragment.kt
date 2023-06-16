@@ -2,6 +2,7 @@ package com.example.articulinarytfg
 
 import AdapterLiked
 import AdapterMainFragment
+import LogInFragment
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -24,7 +25,7 @@ import retrofit2.Response
 
 class LikedFragment : Fragment(R.layout.fragment_liked) {
 
-    var value: String? = "-1"
+    var value: String? = ""
     private lateinit var adapter: AdapterLiked
     val TAG = "MainActivity"
     var datos: ArrayList<RecetasPopulateResponse.Data> = ArrayList()
@@ -44,28 +45,37 @@ class LikedFragment : Fragment(R.layout.fragment_liked) {
         (activity as AppCompatActivity).supportActionBar?.title =
             "Tus Recetas Favoritas"
 
-        getUserRutinesPopualte()
+
 
         val sharedPreferences = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
         value = sharedPreferences?.getString("user", "-1")
 
+        if (value.isNullOrBlank()) {
 
-        adapter = AdapterLiked(datos,value.toString()) { recepee ->
-            // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
-            activity?.let {
-                val fragment = MainDetailedFragment()
-                fragment.arguments = Bundle()
-                fragment.arguments?.putSerializable("recetas", recepee)
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, LogInFragment())?.commit()
 
-                activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                    ?.replace(R.id.container, fragment)?.commit()
+        } else {
+
+            getUserRutinesPopualte()
+
+            adapter = AdapterLiked(datos, value.toString()) { recepee ->
+                // var agentobj = it //llama al objeto que clickeas (item AgenteAdapter)
+                activity?.let {
+                    val fragment = MainDetailedFragment()
+                    fragment.arguments = Bundle()
+                    fragment.arguments?.putSerializable("recetas", recepee)
+
+                    activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                        ?.replace(R.id.container, fragment)?.commit()
+                }
             }
-        }
-        val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVLiked)
+            val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVLiked)
 
-        mainRecyclerView?.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        mainRecyclerView?.adapter = adapter
+            mainRecyclerView?.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            mainRecyclerView?.adapter = adapter
+        }
     }
 
 

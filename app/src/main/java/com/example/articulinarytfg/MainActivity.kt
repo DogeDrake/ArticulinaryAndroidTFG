@@ -1,10 +1,12 @@
 package com.example.articulinarytfg
 
 
+import LogInFragment
 import UserFragment
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
@@ -14,6 +16,8 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
@@ -28,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var FAB: FloatingActionButton
     private var clicked = false
+    private var value = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,10 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         goToFragment(LogInFragment())
+
+        val sharedPreferences = this.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        value = sharedPreferences?.getString("user", "-1").toString()
+        Log.i("User", value.toString())
 
 
         //binding.bottomNavigationView.isVisible = view.isGone
@@ -51,9 +61,16 @@ class MainActivity : AppCompatActivity() {
         FAB = findViewById<FloatingActionButton>(R.id.fab)
 
         FAB.setOnClickListener {
-            supportFragmentManager.beginTransaction().addToBackStack(null)
-                .replace(R.id.container, UploadRecipeFragment())
-                .commit()
+            Log.i("User", value)
+            if (!value.isNullOrBlank()) {
+                supportFragmentManager.beginTransaction().addToBackStack(null)
+                    .replace(R.id.container, UploadRecipeFragment())
+                    .commit()
+            } else {
+                supportFragmentManager.beginTransaction().addToBackStack(null)
+                    .replace(R.id.container, LogInFragment())
+                    .commit()
+            }
         }
 
 
@@ -75,8 +92,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
  */
-                R.id.usermenu -> if (supportFragmentManager.findFragmentById(R.id.container) !is UploadRecipeFragment) {
+                R.id.usermenu ->/* if (supportFragmentManager.findFragmentById(R.id.container) !is UploadRecipeFragment ) */ {
                     // Si no estás en la pantalla, cargarla
+                    Log.i("UserIdLoco", value)
                     supportFragmentManager.beginTransaction().addToBackStack(null)
                         .replace(R.id.container, UserFragment())
                         .commit()

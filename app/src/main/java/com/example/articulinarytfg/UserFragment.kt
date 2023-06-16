@@ -67,59 +67,66 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         super.onViewCreated(view, savedInstanceState)
         val sharedPreferences = context?.getSharedPreferences("prefs", Context.MODE_PRIVATE)
         value = sharedPreferences?.getString("user", "-1")
-        Log.i("VALOR", value.toString())
 
-        lifecycleScope.launch {
-            val userResponse = getUser(value!!)
-            var tvUsername = view.findViewById<TextView>(R.id.example1_TV)
-            var tvRealname = view.findViewById<TextView>(R.id.example2_TV)
-            var userImage = view.findViewById<ImageView>(R.id.profile_image)
+        if (value.isNullOrBlank()) {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, LogInFragment())?.commit()
+        } else {
 
-            username = userResponse[0].username
-            getUserRutinesPopulate(value.toString())
 
-            val imagen2 = userResponse[0].userImg?.toString() ?: "userprofile.jpg"
+            Log.i("VALOR", value.toString())
 
-            if (userResponse[0].realName.isNullOrBlank()) {
-                realname = " "
-                mail = userResponse[0].email
-                tvUsername.text = "@" + username
-                tvRealname.text = realname
-            } else {
-                realname = userResponse[0].realName
-                mail = userResponse[0].email
-                tvUsername.text = "@" + username
-                tvRealname.text = realname
+            lifecycleScope.launch {
+                val userResponse = getUser(value!!)
+                var tvUsername = view.findViewById<TextView>(R.id.example1_TV)
+                var tvRealname = view.findViewById<TextView>(R.id.example2_TV)
+                var userImage = view.findViewById<ImageView>(R.id.profile_image)
+
+                username = userResponse[0].username
+                getUserRutinesPopulate(value.toString())
+
+                val imagen2 = userResponse[0].userImg?.toString() ?: "userprofile.jpg"
+
+                if (userResponse[0].realName.isNullOrBlank()) {
+                    realname = " "
+                    mail = userResponse[0].email
+                    tvUsername.text = "@" + username
+                    tvRealname.text = realname
+                } else {
+                    realname = userResponse[0].realName
+                    mail = userResponse[0].email
+                    tvUsername.text = "@" + username
+                    tvRealname.text = realname
+                }
+
+                if (imagen2.isNotEmpty()) {
+                    Picasso.get().load(imagen2)
+                        .into(userImage)
+                } else {
+                    val defaultImageURL =
+                        "https://img.freepik.com/free-icon/user-image-with-black-background_318-34564.jpg?w=360"
+                    Picasso.get().load(defaultImageURL)
+                        .into(userImage)
+                }
             }
 
-            if (imagen2.isNotEmpty()) {
-                Picasso.get().load(imagen2)
-                    .into(userImage)
-            } else {
-                val defaultImageURL =
-                    "https://img.freepik.com/free-icon/user-image-with-black-background_318-34564.jpg?w=360"
-                Picasso.get().load(defaultImageURL)
-                    .into(userImage)
+            val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
+            emptyTextView = view.findViewById(R.id.emptyTextView)
+            adapter = AdapterUserAgeno(value, datos) { recepee ->
+                activity?.let {
+                    val fragment = MainDetailedFragment()
+                    fragment.arguments = Bundle()
+                    fragment.arguments?.putSerializable("recetas", recepee)
+
+                    activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                        ?.replace(R.id.container, fragment)?.commit()
+                }
             }
+
+            mainRecyclerView?.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            mainRecyclerView?.adapter = adapter
         }
-
-        val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
-        emptyTextView = view.findViewById(R.id.emptyTextView)
-        adapter = AdapterUserAgeno(value, datos) { recepee ->
-            activity?.let {
-                val fragment = MainDetailedFragment()
-                fragment.arguments = Bundle()
-                fragment.arguments?.putSerializable("recetas", recepee)
-
-                activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                    ?.replace(R.id.container, fragment)?.commit()
-            }
-        }
-
-        mainRecyclerView?.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        mainRecyclerView?.adapter = adapter
-
     }
 
     private suspend fun getUser(id: String): UserResponse {

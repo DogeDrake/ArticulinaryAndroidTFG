@@ -94,6 +94,7 @@
                     android:id="@+id/favButton"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:visibility="visible"
                     android:layout_marginLeft="24dp"
                     android:src="@drawable/heartvoid24" />
 
