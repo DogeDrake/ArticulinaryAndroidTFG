@@ -1,17 +1,14 @@
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.articulinarytfg.*
-import com.google.android.material.appbar.AppBarLayout
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

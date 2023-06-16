@@ -96,6 +96,9 @@ interface ApiService {
         val jwt: String
     )
 
+    @DELETE("recetas/{id}")
+    fun deleteReceta(@Path("id") id: Int): Call<Unit>
+
 
     @PUT("recetas/{postId}")
     fun updateLikes(

@@ -4,21 +4,24 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.articulinarytfg.*
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserFragment : Fragment(R.layout.fragment_user) {
+class UserFragment : Fragment(R.layout.fragment_user), ItemTouchHelperAdapter {
 
     private var value: String? = null
     private var username: String = ""
@@ -26,8 +29,9 @@ class UserFragment : Fragment(R.layout.fragment_user) {
     private var mail: String = ""
     private val TAG = "UserProfile"
     private var datos: ArrayList<RecetasPopulateResponse.Data> = ArrayList()
-    private lateinit var adapter: AdapterUserAgeno
+    private lateinit var adapter: AdapterUser
     private lateinit var emptyTextView: TextView
+    private lateinit var mainRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +76,6 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
                 ?.replace(R.id.container, LogInFragment())?.commit()
         } else {
-
-
             Log.i("VALOR", value.toString())
 
             lifecycleScope.launch {
@@ -110,9 +112,9 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 }
             }
 
-            val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
+            mainRecyclerView = view.findViewById<RecyclerView>(R.id.RVUSer)
             emptyTextView = view.findViewById(R.id.emptyTextView)
-            adapter = AdapterUserAgeno(value, datos) { recepee ->
+            adapter = AdapterUser(value, datos, ::deleteReceta, requireContext()) { recepee ->
                 activity?.let {
                     val fragment = MainDetailedFragment()
                     fragment.arguments = Bundle()
@@ -123,10 +125,33 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 }
             }
 
-            mainRecyclerView?.layoutManager =
+            mainRecyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            mainRecyclerView?.adapter = adapter
+            mainRecyclerView.adapter = adapter
         }
+
+        val swipeCallback = object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                adapter.onItemDismiss(position)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(mainRecyclerView)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        adapter.onItemDismiss(position)
     }
 
     private suspend fun getUser(id: String): UserResponse {
@@ -141,6 +166,26 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             }
         }
     }
+
+    private fun deleteReceta(id: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val call = ApiRest.service.deleteReceta(id)
+            call.enqueue(object : Callback<Unit> {
+                override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                    if (response.isSuccessful) {
+
+                    } else {
+                        Log.e("deleteUser", response.errorBody()?.string() ?: "Error deleting user")
+                    }
+                }
+
+                override fun onFailure(call: Call<Unit>, t: Throwable) {
+                    Log.e("deleteUser", "Error: ${t.message}")
+                }
+            })
+        }
+    }
+
 
     private fun getUserRutinesPopulate(value: String) {
         val call = ApiRest.service.getRecetasPopulateResponse()
@@ -181,4 +226,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             }
         })
     }
+}
+
+interface ItemTouchHelperAdapter {
+    fun onItemDismiss(position: Int)
 }
