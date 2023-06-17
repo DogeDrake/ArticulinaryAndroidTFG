@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFE9E6"
+    android:background="@color/AntiqueWhite"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/TopToolBarUpload"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/Salmon"
+        android:background="@color/BurlyWood"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
@@ -65,13 +65,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:hint="Gente"
+                        android:inputType="number"
                         android:padding="10dp" />
 
                     <EditText
                         android:id="@+id/ETTiempo"
                         android:layout_width="245dp"
                         android:layout_height="wrap_content"
-                        android:hint="Tiempo"
+                        android:hint="Tiempo (Minutos)"
+                        android:inputType="number"
                         android:padding="10dp" />
                 </LinearLayout>
 
@@ -99,7 +101,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:backgroundTint="@color/BurlyWood"
                 android:text="Agregar Ingrediente" />
+
 
             <LinearLayout
                 android:id="@+id/PasosLayout"
@@ -113,7 +117,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Pasos" />
-
             </LinearLayout>
 
             <Button
@@ -121,15 +124,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="Agregar Ingrediente" />
+                android:backgroundTint="@color/BurlyWood"
+                android:text="Agregar Pasos" />
+
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="100dp"
+                android:layout_margin="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
                 android:backgroundTint="#A36F41"
                 android:text="Guardar" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="150dp"></Space>
             <!--
             <Button
                 android:id="@+id/SalirRecetas"

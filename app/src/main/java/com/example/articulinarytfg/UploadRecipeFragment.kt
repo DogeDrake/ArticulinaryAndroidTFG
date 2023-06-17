@@ -20,6 +20,7 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -100,7 +101,19 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
 
  */
         ivImage.setOnClickListener {
-            startGallery()
+            val options = arrayOf("Iniciar Cámara", "Iniciar Galería")
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Elige una opción")
+            builder.setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> startCamera()
+                    1 -> startGallery()
+                }
+            }
+
+            val dialog = builder.create()
+            dialog.show()
         }
 
         checkPermissions()

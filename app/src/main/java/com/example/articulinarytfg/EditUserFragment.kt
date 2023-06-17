@@ -20,6 +20,7 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityCompat.requestPermissions
@@ -50,7 +51,7 @@ import java.util.*
 
 class EditUserFragment : Fragment(R.layout.fragment_edit_user) {
 
-    var value: String? = "-1"
+    var value: String? = ""
 
     private lateinit var ivImage: ImageView
     private lateinit var getContent: ActivityResultLauncher<String>
@@ -103,17 +104,25 @@ class EditUserFragment : Fragment(R.layout.fragment_edit_user) {
         view.findViewById<Button>(R.id.btnGaleria).setOnClickListener {
             startGallery()
         }
-
  */
         ivImage.setOnClickListener {
-            startGallery()
+            val options = arrayOf("Iniciar Cámara", "Iniciar Galería")
+
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Elige una opción")
+            builder.setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> startCamera()
+                    1 -> startGallery()
+                }
+            }
+
+            val dialog = builder.create()
+            dialog.show()
         }
-
         checkPermissions()
-
         return view
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -168,6 +177,10 @@ class EditUserFragment : Fragment(R.layout.fragment_edit_user) {
             var Realname = ETRealname.text.toString()
             var Id = value.toString().toInt()
 
+            if(imageString.isNullOrBlank()){
+                imageString = "https://firebasestorage.googleapis.com/v0/b/articullinary.appspot.com/o/notes%2Fimages%2Fuserimage.png?alt=media&token=dbf7c8dd-6759-4d20-a792-fc67eb9daea0&_gl=1*13s8vnk*_ga*NjczMjI0NTY4LjE2NzY1MzU5NjA.*_ga_CW55HF8NVT*MTY4NjQ5MzA3NC4yMC4xLjE2ODY0OTMzOTYuMC4wLjA."
+            }
+
             // Upload the image file
 
             // Callback when image upload is completed
@@ -186,7 +199,6 @@ class EditUserFragment : Fragment(R.layout.fragment_edit_user) {
                 .reference
                 .child("notes/images/${UUID.randomUUID()}.$extension")
             val uploadTask = imageRef.putFile(file)
-
             // Register observers to listen for when the download is done or if it fails
             uploadTask.addOnFailureListener {
                 // Handle unsuccessful uploads
@@ -194,7 +206,7 @@ class EditUserFragment : Fragment(R.layout.fragment_edit_user) {
             }.addOnSuccessListener { taskSnapshot ->
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
                     imageString = uri.toString()
-                    Log.i("Errore", imageString)
+                    Log.i("Errore", "Metodo " + imageString)
 
                     // Invoke the callback with the image URL
                 }
@@ -278,10 +290,10 @@ private suspend fun getUser(id: String): UserResponse {
 }
 
 
-private fun putUser(Username: String, Realname: String, Mail: String, userImg: String, id: Int) {
+private fun putUser(Username: String, RealName: String, Mail: String, userImg: String, id: Int) {
     val user = User(
         Username,
-        Realname,
+        RealName,
         Mail,
         userImg,
         1,
