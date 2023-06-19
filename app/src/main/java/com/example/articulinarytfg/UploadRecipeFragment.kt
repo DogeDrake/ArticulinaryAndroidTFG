@@ -45,7 +45,7 @@ class UploadRecipeFragment : Fragment(R.layout.fragment_upload_recipe) {
 
     private lateinit var ingredientesLayout: LinearLayout
     private lateinit var pasosLayout: LinearLayout
-    var value: String? = ""
+    var value: String? = "-1"
 
     private lateinit var ivImage: ImageView
     private lateinit var getContent: ActivityResultLauncher<String>
