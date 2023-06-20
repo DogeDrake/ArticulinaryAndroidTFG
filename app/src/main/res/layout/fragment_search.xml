@@ -89,6 +89,15 @@
                 android:layout_height="wrap_content"
                 android:text="Bajo en Azúcar" />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/Reset"
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/Red"
+                android:backgroundTint="@color/Red"
+                android:text="Eliminar FIltros" />
+
         </com.google.android.material.chip.ChipGroup>
 
     </LinearLayout>

@@ -61,16 +61,9 @@ class MainActivity : AppCompatActivity() {
         FAB = findViewById<FloatingActionButton>(R.id.fab)
 
         FAB.setOnClickListener {
-            Log.i("User", value)
-            if (!value.isNullOrBlank()) {
-                supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .replace(R.id.container, UploadRecipeFragment())
-                    .commit()
-            } else {
-                supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .replace(R.id.container, LogInFragment())
-                    .commit()
-            }
+            supportFragmentManager.beginTransaction().addToBackStack(null)
+                .replace(R.id.container, UploadRecipeFragment())
+                .commit()
         }
 
 

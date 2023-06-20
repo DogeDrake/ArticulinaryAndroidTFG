@@ -1,6 +1,8 @@
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.preference.Preference
@@ -12,13 +14,19 @@ class AjustesFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_screen, rootKey)
-
+        val GoGooglePreference = findPreference<Preference>("privacy_policy")
         val logoutPreference = findPreference<Preference>("logout")
         logoutPreference?.setOnPreferenceClickListener {
             // Mostrar el diálogo de confirmación
             showConfirmationDialog()
 
             true // Indica que el evento de clic está siendo manejado
+        }
+        GoGooglePreference?.setOnPreferenceClickListener {
+            val url = "https://www.google.com"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+            true
         }
     }
 

@@ -1,12 +1,14 @@
 package com.example.articulinarytfg
 
 import AdapterSearchFragment
+import LogInFragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,7 +57,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         // Configurar Listener de texto para el campo de búsqueda
         etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                val searchQuery = s.toString()
+                getUserRutinesPopualteFilters(searchQuery)
+                getUserRutinesPopualteFilters(searchQuery)
+
+            }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val searchQuery = s.toString()
                 getUserRutinesPopualteFilters(searchQuery)
@@ -66,7 +73,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
             }
         })
-
+        val GrupoChipy = view.findViewById<ChipGroup>(R.id.GrupoChip)
 
         val chipVegano = view.findViewById<Chip>(R.id.chipVegano)
         chipVegano.setOnCheckedChangeListener { _, isChecked ->
@@ -98,6 +105,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             applyFilters()
         }
 
+        val resetButton = view.findViewById<Button>(R.id.Reset)
+        resetButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.replace(R.id.container, SearchFragment())?.commit()
+        }
 
         val mainRecyclerView = view.findViewById<RecyclerView>(R.id.RvSView)
 
@@ -174,13 +186,20 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             val isSinLactosa = isSinLactosaSelected && item.attributes.isSinLactosa
             val isBajoEnAzucar = isBajoEnAzucarSelected && item.attributes.isBajoEnAzucar
 
+            // Verificar si la receta cumple con todos los filtros seleccionados
             if (isVegano || isVegetariano || isSinGluten || isSinLactosa || isBajoEnAzucar) {
                 filteredList.add(item)
             }
         }
 
-        adapter.updateData(filteredList)
+        if (filteredList.isEmpty()) {
+            // Si no hay recetas que cumplan los filtros, mostrar todas las recetas
+            adapter.updateData(datos)
+        } else {
+            adapter.updateData(filteredList)
+        }
     }
+
 
 
     private fun getUserRutinesPopualteFilters(searchQuery: String) {
@@ -211,5 +230,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
         })
     }
+
 
 }

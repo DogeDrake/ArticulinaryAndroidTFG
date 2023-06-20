@@ -40,10 +40,10 @@ class AdapterSearchFragment(
         if (text.isEmpty()) {
             filteredList.addAll(data)
         } else {
-            val search = text.lowercase(Locale.getDefault())
-
+            val searchIngredients = text.lowercase(Locale.getDefault()).split(" ")
             for (item in data) {
-                if (item.attributes.titulo.lowercase(Locale.getDefault()).contains(search)) {
+                val itemIngredients = item.attributes.ingredientesTexto.map { it.toLowerCase() }
+                if (searchIngredients.all { ingredient -> itemIngredients.toString().contains(ingredient) }) {
                     filteredList.add(item)
                 }
             }
